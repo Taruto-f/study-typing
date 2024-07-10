@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='ja'>
+    <html lang='ja' suppressHydrationWarning={true}>
       <body className={notosans.className}>
         <div className='w-screen h-screen p-8 flex items-start justify-center'>
           <Providers>{children}</Providers>
