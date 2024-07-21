@@ -4,23 +4,15 @@ import { NextUIProvider } from '@nextui-org/react';
 import { ThemeProvider } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import { TopTab } from './tabs';
-import { default_cookie } from './cookie';
-import { getCookie, hasCookie, setCookie } from 'cookies-next';
+import { reset_cookie } from './cookie';
+import { getCookie } from 'cookies-next';
 import { useEffect, useState } from 'react';
-import { expires_date } from './cookie';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-
-  const keys = Object.keys(default_cookie);
-  keys.forEach((key) => {
-    if (!hasCookie(key)) {
-      setCookie(key, default_cookie[key], { expires: expires_date });
-    }
-  });
-
   const [theme, setTheme] = useState('system');
   useEffect(() => {
+    reset_cookie();
     setTheme(getCookie('theme')!);
   }, []);
 

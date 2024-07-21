@@ -1,5 +1,5 @@
 'use client';
-import { Tabs, Tab } from '@nextui-org/react';
+import { Tabs, Tab, Link } from '@nextui-org/react';
 import { usePathname } from 'next/navigation';
 
 export function TopTab({ children }: { children: React.ReactNode }) {
@@ -8,10 +8,19 @@ export function TopTab({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className='flex w-screen p-5 flex-col'>
-        <Tabs aria-label='Options' selectedKey={path}>
-          <Tab key='/' title='Home' href='/'></Tab>
-          <Tab key='/data' title='Data' href='/data'></Tab>
-        </Tabs>
+        <div className='flex gap-4 items-center'>
+          <Link
+            className='text-xl text-justify font-bold'
+            color='foreground'
+            href='/'
+          >
+            Study Typing
+          </Link>
+          <Tabs aria-label='Options' selectedKey={path}>
+            <Tab key='/' title='Home' href='/'></Tab>
+            <Tab key='/data' title='Data' href='/data'></Tab>
+          </Tabs>
+        </div>
         {children}
       </div>
     </>
