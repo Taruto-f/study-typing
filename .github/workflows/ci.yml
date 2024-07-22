@@ -1,0 +1,25 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  ci:
+    name: CI Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install Deps
+        run: bun install --frozen-lockfile
+
+      - name: Check format
+        run: bun run format:check
+
+      - name: Check Lint
+        run: bun run lint
+
+      - name: Run Tests
+        run: bun run test
