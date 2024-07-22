@@ -9,14 +9,13 @@ import {
   SelectItem,
   SelectSection,
   Selection,
-  Tooltip,
 } from '@nextui-org/react';
 import { useTheme } from 'next-themes';
 import { themes } from './theme';
 import { useEffect, useState } from 'react';
-import { deleteCookie, setCookie } from 'cookies-next';
-import { expires_date, reset_cookie } from './cookie';
-import { datas, exist_subject, subject_names, subjects_select } from './data';
+import { setCookie } from 'cookies-next';
+import { expires_date } from './cookie';
+import { datas, exist_subject, subjects_select } from './data';
 import { filter_keys, only_enable } from './util';
 
 export default function Home() {
