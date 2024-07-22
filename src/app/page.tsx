@@ -13,9 +13,10 @@ import {
 import { useTheme } from 'next-themes';
 import { themes } from './theme';
 import { useEffect, useState } from 'react';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
-import { expires_date, reset_cookie } from './cookie';
-import { datas } from './data';
+import { setCookie } from 'cookies-next';
+import { expires_date } from './cookie';
+import { datas, exist_subject, subjects_select } from './data';
+import { filter_keys, only_enable } from './util';
 
 export default function Home() {
   // 初期設定類
@@ -23,15 +24,22 @@ export default function Home() {
 
   const [show_theme, setShowTheme] = useState('system');
   const [select_season, setSeason] = useState<Selection>(new Set([]));
-  const init_setting = () => {
-    if (getCookie('select_season')! !== '')
-      setSeason(new Set(getCookie('select_season')!.split(',')));
-    else setSeason(new Set([]));
-  };
+  const [select_subject, setSubject] = useState<Selection>(new Set([]));
+  const [selectable_subject, setSelectableSubject] = useState<
+    Record<string, boolean>
+  >(exist_subject(new Set<string>()));
+  // const init_setting = () => {
+  //   if (getCookie('select_season')! !== '') {
+  //     setSeason(new Set(getCookie('select_season')!.split(',')));
+  //   } else {
+  //     setSeason(new Set([]));
+  //   }
+  // };
   useEffect(() => {
     setShowTheme(theme!);
-    init_setting();
-  }, [theme, show_theme]);
+    //   init_setting();
+    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [theme, setSeason]);
 
   // 設定リセットの警告
 
@@ -40,7 +48,7 @@ export default function Home() {
       <div className='py-5 w-full'>
         <Card>
           <CardBody>
-            <div className='py-20'></div>
+            <div className='py-20 justify-center items-center flex'></div>
           </CardBody>
         </Card>
       </div>
@@ -51,47 +59,77 @@ export default function Home() {
             <div className='space-y-3'>
               <h1 className='font-bold'>ゲーム設定</h1>
 
-              <Select
-                items={datas}
-                className='max-w-xs'
-                label='範囲'
-                selectionMode='multiple'
-                selectedKeys={select_season}
-                onSelectionChange={(keys) => {
-                  setSeason(keys);
-                  setCookie('select_season', [...keys].join(','), {
-                    expires: expires_date,
-                  });
-                }}
-              >
-                {(data) => {
-                  return (
-                    <SelectSection showDivider title={data.year}>
-                      {data.seasons.map((season) => (
-                        <SelectItem
-                          key={data.key + '_' + String(season.season)}
-                        >
-                          {`${data.year} ${season.season}学期`}
-                        </SelectItem>
-                      ))}
-                    </SelectSection>
-                  );
-                }}
-              </Select>
-              <p>{[...select_season].join(', ')}</p>
+              <div className='flex gap-4'>
+                <Select
+                  items={datas}
+                  className='max-w-xs'
+                  label='範囲'
+                  selectionMode='multiple'
+                  selectedKeys={select_season}
+                  onSelectionChange={(keys) => {
+                    setSeason(keys);
+                    setCookie('select_season', [...keys].join(','), {
+                      expires: expires_date,
+                    });
+                    setSelectableSubject(exist_subject(keys as Set<string>));
+                    setSubject(
+                      only_enable<string>(
+                        select_subject as Set<string>,
+                        exist_subject(keys as Set<string>)
+                      )
+                    );
+                    console.log(
+                      only_enable<string>(
+                        select_subject as Set<string>,
+                        exist_subject(keys as Set<string>)
+                      )
+                    );
+                  }}
+                >
+                  {(data) => {
+                    return (
+                      <SelectSection showDivider title={data.year}>
+                        {data.seasons.map((season) => (
+                          <SelectItem
+                            key={data.key + '_' + String(season.season)}
+                          >
+                            {`${data.year} ${season.season}学期`}
+                          </SelectItem>
+                        ))}
+                      </SelectSection>
+                    );
+                  }}
+                </Select>
+
+                <Select
+                  label='教科'
+                  className='max-w-md'
+                  items={subjects_select}
+                  disabledKeys={filter_keys(selectable_subject, false)}
+                  selectionMode='multiple'
+                  selectedKeys={select_subject}
+                  onSelectionChange={(keys) => {
+                    setSubject(keys);
+                  }}
+                >
+                  {(subject) => (
+                    <SelectItem key={subject.key}>{subject.name}</SelectItem>
+                  )}
+                </Select>
+              </div>
+              <p>
+                {[...select_season].join(', ')}:
+                {JSON.stringify(selectable_subject)}
+              </p>
 
               <div className='flex gap-4'>
                 <Button
                   color='danger'
                   variant='ghost'
                   onPress={() => {
-                    const keys = ['select_season'];
-                    keys.forEach((val) => {
-                      deleteCookie(val);
-                    });
-
-                    reset_cookie();
-                    init_setting();
+                    setSeason(new Set());
+                    setSubject(new Set());
+                    setSelectableSubject(exist_subject(new Set<string>()));
                   }}
                 >
                   リセット

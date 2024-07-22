@@ -8,7 +8,7 @@ export const TypeData = z.object({
   mean: z.string(),
 });
 
-const DataArray = z.array(TypeData);
+const DataArray = z.array(TypeData).optional();
 
 export const Subjects = z.object({
   season: z.number().int().min(1).max(3), // 学期
@@ -20,6 +20,9 @@ export const Subjects = z.object({
   pe: DataArray, // 保健体育
   music: DataArray, // 音楽
 });
+
+export type SubjectsType = keyof Omit<z.infer<typeof Subjects>, 'season'>;
+export type SubjectNameType = Record<SubjectsType, string>;
 
 export const SeasonData = z.object({
   year: z.string().regex(year_regex), // 中学一年
@@ -39,8 +42,6 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
         social: [],
         science: [],
         english: [],
-        pe: [],
-        music: [],
       },
     ],
   },
@@ -63,3 +64,67 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
 ];
 
 export const datas = z.array(SeasonData).parse(data_raw);
+
+export const subject_names: SubjectNameType = {
+  jp: '国語',
+  math: '数学/算数',
+  social: '社会',
+  science: '理科',
+  english: '英語',
+  music: '音楽',
+  pe: '保健体育',
+};
+export const subjects = Object.keys(subject_names) as SubjectsType[];
+export const map_data: Record<string, z.infer<typeof Subjects>> = (() => {
+  const ret: Record<string, z.infer<typeof Subjects>> = {};
+
+  datas.forEach((year) => {
+    year.seasons.forEach((season) => {
+      ret[`${year.key}_${season.season}`] = season;
+    });
+  });
+
+  return ret;
+})();
+
+export function exist_subject(
+  keys: Set<string>
+): Record<SubjectsType, boolean> {
+  const ans: Record<SubjectsType, boolean> = {} as Record<
+    SubjectsType,
+    boolean
+  >;
+
+  for (let i = 0; i < subjects.length; ++i) {
+    ans[subjects[i]] = false;
+  }
+
+  keys.forEach((key) => {
+    const season = map_data[key];
+    const season_keys = Object.keys(season);
+    season_keys.forEach((val) => {
+      if (val !== 'season') {
+        ans[val as SubjectsType] = true;
+      }
+    });
+  });
+
+  return ans;
+}
+
+interface SubjectSelect {
+  key: SubjectsType;
+  name: string;
+}
+
+export const subjects_select: SubjectSelect[] = (() => {
+  const ans: SubjectSelect[] = [];
+  for (let i = 0; i < subjects.length; ++i) {
+    ans.push({
+      key: subjects[i],
+      name: subject_names[subjects[i]],
+    });
+  }
+
+  return ans;
+})();
