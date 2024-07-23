@@ -28,17 +28,9 @@ export default function Home() {
   const [selectable_subject, setSelectableSubject] = useState<
     Record<string, boolean>
   >(exist_subject(new Set<string>()));
-  // const init_setting = () => {
-  //   if (getCookie('select_season')! !== '') {
-  //     setSeason(new Set(getCookie('select_season')!.split(',')));
-  //   } else {
-  //     setSeason(new Set([]));
-  //   }
-  // };
+
   useEffect(() => {
     setShowTheme(theme!);
-    //   init_setting();
-    //   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme, setSeason]);
 
   // 設定リセットの警告
@@ -68,17 +60,8 @@ export default function Home() {
                   selectedKeys={select_season}
                   onSelectionChange={(keys) => {
                     setSeason(keys);
-                    setCookie('select_season', [...keys].join(','), {
-                      expires: expires_date,
-                    });
                     setSelectableSubject(exist_subject(keys as Set<string>));
                     setSubject(
-                      only_enable<string>(
-                        select_subject as Set<string>,
-                        exist_subject(keys as Set<string>)
-                      )
-                    );
-                    console.log(
                       only_enable<string>(
                         select_subject as Set<string>,
                         exist_subject(keys as Set<string>)
