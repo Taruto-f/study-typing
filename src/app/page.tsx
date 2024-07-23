@@ -13,10 +13,10 @@ import {
 import { useTheme } from 'next-themes';
 import { themes } from './theme';
 import { useEffect, useState } from 'react';
-import { setCookie } from 'cookies-next';
-import { expires_date } from './cookie';
+import { setCookie, getCookie } from 'cookies-next';
+import { default_cookie, expires_date } from './cookie';
 import { datas, exist_subject, subjects_select } from './data';
-import { filter_keys, only_enable } from './util';
+import { filter_keys, only_enable, set_to_str, str_to_set } from './util';
 
 export default function Home() {
   // 初期設定類
@@ -28,17 +28,20 @@ export default function Home() {
   const [selectable_subject, setSelectableSubject] = useState<
     Record<string, boolean>
   >(exist_subject(new Set<string>()));
-  // const init_setting = () => {
-  //   if (getCookie('select_season')! !== '') {
-  //     setSeason(new Set(getCookie('select_season')!.split(',')));
-  //   } else {
-  //     setSeason(new Set([]));
-  //   }
-  // };
+
+  const init_setting = () => {
+    const new_season = str_to_set<string>(getCookie('select_season')!);
+    setSeason(new_season);
+
+    const selectable = exist_subject(new_season);
+    setSelectableSubject(selectable);
+
+    setSubject(str_to_set<string>(getCookie('select_subject')!));
+  };
+
   useEffect(() => {
     setShowTheme(theme!);
-    //   init_setting();
-    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+    init_setting();
   }, [theme, setSeason]);
 
   // 設定リセットの警告
@@ -68,17 +71,15 @@ export default function Home() {
                   selectedKeys={select_season}
                   onSelectionChange={(keys) => {
                     setSeason(keys);
-                    setCookie('select_season', [...keys].join(','), {
-                      expires: expires_date,
-                    });
+                    setCookie(
+                      'select_season',
+                      set_to_str(keys as Set<string>),
+                      {
+                        expires: expires_date,
+                      }
+                    );
                     setSelectableSubject(exist_subject(keys as Set<string>));
                     setSubject(
-                      only_enable<string>(
-                        select_subject as Set<string>,
-                        exist_subject(keys as Set<string>)
-                      )
-                    );
-                    console.log(
                       only_enable<string>(
                         select_subject as Set<string>,
                         exist_subject(keys as Set<string>)
@@ -110,6 +111,11 @@ export default function Home() {
                   selectedKeys={select_subject}
                   onSelectionChange={(keys) => {
                     setSubject(keys);
+                    setCookie(
+                      'select_subject',
+                      set_to_str(keys as Set<string>),
+                      { expires: expires_date }
+                    );
                   }}
                 >
                   {(subject) => (
@@ -123,13 +129,19 @@ export default function Home() {
               </p>
 
               <div className='flex gap-4'>
+                {/* <Button onPress={init_setting}>前回の設定を読み込み</Button> */}
+
                 <Button
                   color='danger'
                   variant='ghost'
                   onPress={() => {
-                    setSeason(new Set());
-                    setSubject(new Set());
-                    setSelectableSubject(exist_subject(new Set<string>()));
+                    const reset_cookie = ['select_season', 'select_subject'];
+                    reset_cookie.forEach((val) => {
+                      setCookie(val, default_cookie[val], {
+                        expires: expires_date,
+                      });
+                    });
+                    init_setting();
                   }}
                 >
                   リセット
