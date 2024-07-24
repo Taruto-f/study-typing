@@ -15,7 +15,7 @@ import { themes } from './theme';
 import { useEffect, useState } from 'react';
 import { setCookie, getCookie } from 'cookies-next';
 import { default_cookie, expires_date } from './cookie';
-import { datas, exist_subject, subjects_select } from './data';
+import { datas, exist_subject, subjects, subjects_select } from './data';
 import { filter_keys, only_enable, set_to_str, str_to_set } from './util';
 
 export default function Home() {
@@ -62,7 +62,7 @@ export default function Home() {
             <div className='space-y-3'>
               <h1 className='font-bold'>ゲーム設定</h1>
 
-              <div className='flex gap-4'>
+              <div className='flex gap-4 items-center'>
                 <Select
                   items={datas}
                   className='max-w-xs'
@@ -122,10 +122,32 @@ export default function Home() {
                     <SelectItem key={subject.key}>{subject.name}</SelectItem>
                   )}
                 </Select>
+
+                <Button
+                  size='lg'
+                  color='primary'
+                  onPress={() => {
+                    const tmp = new Set<string>([
+                      ...(select_subject as Set<string>),
+                    ]);
+                    subjects.forEach((val) => {
+                      if (selectable_subject[val]) {
+                        tmp.add(val);
+                      }
+                    });
+                    setCookie('select_subject', set_to_str(tmp), {
+                      expires: expires_date,
+                    });
+                    setSubject(tmp);
+                  }}
+                >
+                  全教科を選択
+                </Button>
               </div>
               <p>
                 {[...select_season].join(', ')}:
                 {JSON.stringify(selectable_subject)}
+                {[...select_subject].join(',')}
               </p>
 
               <div className='flex gap-4'>
