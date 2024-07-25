@@ -13,8 +13,7 @@ import {
 import { useTheme } from 'next-themes';
 import { themes } from './theme';
 import { useEffect, useState } from 'react';
-import { setCookie, getCookie } from 'cookies-next';
-import { default_cookie, expires_date } from './cookie';
+import { default_storage } from './localstorage';
 import { datas, exist_subject, subjects, subjects_select } from './data';
 import { filter_keys, only_enable, set_to_str, str_to_set } from './util';
 
@@ -30,13 +29,15 @@ export default function Home() {
   >(exist_subject(new Set<string>()));
 
   const init_setting = () => {
-    const new_season = str_to_set<string>(getCookie('select_season')!);
+    const new_season = str_to_set<string>(
+      localStorage.getItem('select_season')!
+    );
     setSeason(new_season);
 
     const selectable = exist_subject(new_season);
     setSelectableSubject(selectable);
 
-    setSubject(str_to_set<string>(getCookie('select_subject')!));
+    setSubject(str_to_set<string>(localStorage.getItem('select_subject')!));
   };
 
   useEffect(() => {
@@ -71,12 +72,9 @@ export default function Home() {
                   selectedKeys={select_season}
                   onSelectionChange={(keys) => {
                     setSeason(keys);
-                    setCookie(
+                    localStorage.setItem(
                       'select_season',
-                      set_to_str(keys as Set<string>),
-                      {
-                        expires: expires_date,
-                      }
+                      set_to_str(keys as Set<string>)
                     );
                     setSelectableSubject(exist_subject(keys as Set<string>));
                     setSubject(
@@ -111,10 +109,9 @@ export default function Home() {
                   selectedKeys={select_subject}
                   onSelectionChange={(keys) => {
                     setSubject(keys);
-                    setCookie(
+                    localStorage.setItem(
                       'select_subject',
-                      set_to_str(keys as Set<string>),
-                      { expires: expires_date }
+                      set_to_str(keys as Set<string>)
                     );
                   }}
                 >
@@ -135,9 +132,7 @@ export default function Home() {
                         tmp.add(val);
                       }
                     });
-                    setCookie('select_subject', set_to_str(tmp), {
-                      expires: expires_date,
-                    });
+                    localStorage.setItem('select_subject', set_to_str(tmp));
                     setSubject(tmp);
                   }}
                 >
@@ -159,9 +154,7 @@ export default function Home() {
                   onPress={() => {
                     const reset_cookie = ['select_season', 'select_subject'];
                     reset_cookie.forEach((val) => {
-                      setCookie(val, default_cookie[val], {
-                        expires: expires_date,
-                      });
+                      localStorage.setItem(val, default_storage[val]);
                     });
                     init_setting();
                   }}
@@ -183,9 +176,7 @@ export default function Home() {
 
                     if (new_theme.length !== 0) {
                       setTheme(new_theme[0]);
-                      setCookie('theme', new_theme[0], {
-                        expires: expires_date,
-                      });
+                      localStorage.setItem('theme', new_theme[0]);
                     }
                   }}
                 >

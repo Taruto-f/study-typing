@@ -14,7 +14,6 @@
   "dependencies": {
     "@nextui-org/react": "^2.4.2",
     "@nextui-org/tabs": "^2.0.32",
-    "cookies-next": "^4.2.1",
     "framer-motion": "^11.2.13",
     "higgsino": "^1.0.31",
     "next": "14.2.4",
