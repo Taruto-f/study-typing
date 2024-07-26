@@ -9,6 +9,7 @@ import {
   SelectItem,
   SelectSection,
   Selection,
+  Switch,
 } from '@nextui-org/react';
 import { useTheme } from 'next-themes';
 import { themes } from './theme';
@@ -27,6 +28,8 @@ export default function Home() {
   const [selectable_subject, setSelectableSubject] = useState<
     Record<string, boolean>
   >(exist_subject(new Set<string>()));
+  const [enable_type, setEnableType] = useState<boolean>(true);
+  const [enable_miss, setEnableMiss] = useState<boolean>(true);
 
   const init_setting = () => {
     const new_season = str_to_set<string>(
@@ -42,6 +45,8 @@ export default function Home() {
 
   useEffect(() => {
     setShowTheme(theme!);
+    setEnableType(localStorage.getItem('enable_type')! === 'true');
+    setEnableMiss(localStorage.getItem('enable_miss')! === 'true');
     init_setting();
   }, [theme, setSeason]);
 
@@ -165,6 +170,35 @@ export default function Home() {
 
               <Divider />
               <h1 className='font-bold'>環境設定</h1>
+              <div className='flex gap-4'>
+                <Switch
+                  isSelected={enable_type}
+                  onValueChange={(select) => {
+                    setEnableType(select);
+                    localStorage.setItem(
+                      'enable_type',
+                      select ? 'true' : 'false'
+                    );
+                  }}
+                  color='success'
+                >
+                  タイプ音
+                </Switch>
+                <Switch
+                  isSelected={enable_miss}
+                  onValueChange={(select) => {
+                    setEnableMiss(select);
+                    localStorage.setItem(
+                      'enable_miss',
+                      select ? 'true' : 'false'
+                    );
+                  }}
+                  color='success'
+                >
+                  ミス音
+                </Switch>
+              </div>
+
               <div>
                 <Select
                   label='テーマ'
