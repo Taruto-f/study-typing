@@ -14,7 +14,7 @@ import {
 import { useTheme } from 'next-themes';
 import { themes } from './theme';
 import { useEffect, useState } from 'react';
-import { default_storage } from './localstorage';
+import { default_storage, reset_storage } from './localstorage';
 import { datas, exist_subject, subjects, subjects_select } from './data';
 import { filter_keys, only_enable, set_to_str, str_to_set } from './util';
 
@@ -41,13 +41,16 @@ export default function Home() {
     setSelectableSubject(selectable);
 
     setSubject(str_to_set<string>(localStorage.getItem('select_subject')!));
+
+    setEnableType(localStorage.getItem('enable_type')! === 'true');
+    setEnableMiss(localStorage.getItem('enable_miss')! === 'true');
   };
 
   useEffect(() => {
+    reset_storage();
     setShowTheme(theme!);
-    setEnableType(localStorage.getItem('enable_type')! === 'true');
-    setEnableMiss(localStorage.getItem('enable_miss')! === 'true');
     init_setting();
+    console.log(localStorage);
   }, [theme, setSeason]);
 
   // 設定リセットの警告
@@ -197,6 +200,8 @@ export default function Home() {
                 >
                   ミス音
                 </Switch>
+
+                <p>{enable_type ? 'true' : 'false'}, </p>
               </div>
 
               <div>
