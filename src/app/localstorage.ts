@@ -2,6 +2,8 @@ export const default_storage: Record<string, string> = {
   theme: 'system',
   select_season: '',
   select_subject: '',
+  enable_type: 'true',
+  enable_miss: 'true',
 };
 
 export function reset_storage() {
