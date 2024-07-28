@@ -7,7 +7,7 @@ export function TopTab({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <div className='flex w-screen p-5 flex-col'>
+      <div className='flex w-screen px-5 flex-col'>
         <div className='flex gap-4 items-center'>
           <Link
             className='text-xl text-justify font-bold'

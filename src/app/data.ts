@@ -68,8 +68,8 @@ export const datas = z.array(SeasonData).parse(data_raw);
 export const subject_names: SubjectNameType = {
   jp: '国語',
   math: '数学/算数',
-  social: '社会',
   science: '理科',
+  social: '社会',
   english: '英語',
   music: '音楽',
   pe: '保健体育',
@@ -86,6 +86,7 @@ export const map_data: Record<string, z.infer<typeof Subjects>> = (() => {
 
   return ret;
 })();
+console.log(map_data);
 
 export function exist_subject(
   keys: Set<string>
@@ -128,3 +129,24 @@ export const subjects_select: SubjectSelect[] = (() => {
 
   return ans;
 })();
+
+export function seasons_to_str(season: Set<string>): string {
+  const ret: string[] = [];
+  datas.forEach((dat) => {
+    for (let i = 1; i <= 3; ++i) {
+      if (season.has(`${dat.key}_${i}`)) {
+        ret.push(`${dat.year} ${i}学期`);
+      }
+    }
+  });
+
+  return ret.join(' / ');
+}
+
+export function subjects_to_str(subject: Set<string>): string {
+  const ret: string[] = [];
+  subjects.forEach((key) => {
+    if (subject.has(key)) ret.push(subject_names[key]);
+  });
+  return ret.join(', ');
+}
