@@ -39,3 +39,11 @@ export function str_to_set<K>(str: string | undefined) {
     return new Set<K>(str.split(',') as K[]);
   }
 }
+
+export function to_bool(str: string) {
+  return str === 'true';
+}
+
+export function btos(bool: boolean) {
+  return bool ? 'true' : 'false';
+}
