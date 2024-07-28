@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Card,
   CardBody,
@@ -6,12 +8,23 @@ import {
   Divider,
 } from '@nextui-org/react';
 import { Source_Code_Pro } from 'next/font/google';
+import { useCallback, useEffect } from 'react';
 
 const SourceCodePro = Source_Code_Pro({
   subsets: ['latin'],
 });
 
 export default function Play() {
+  const keyHand = useCallback((event: KeyboardEvent) => {
+    console.log(event.code);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('keydown', keyHand, false);
+
+    return () => document.removeEventListener('keydown', keyHand);
+  }, [keyHand]);
+
   return (
     <>
       <div className='py-4 w-full'>
