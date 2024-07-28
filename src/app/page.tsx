@@ -47,6 +47,9 @@ export default function Home() {
   const [selectable_subject, setSelectableSubject] = useState<
     Record<string, boolean>
   >(exist_subject(new Set<string>()));
+
+  const [select_time, setTime] = useState<Selection>(new Set<string>(['60s']));
+
   const [enable_type, setEnableType] = useState<boolean>(true);
   const [enable_miss, setEnableMiss] = useState<boolean>(true);
   const [show_roman, setShowRoman] = useState<boolean>(true);
@@ -73,6 +76,8 @@ export default function Home() {
 
     setShowRoman(to_bool(localStorage.getItem('show_roman')!));
     setShowWord(to_bool(localStorage.getItem('show_word')!));
+
+    setTime(new Set<string>([localStorage.getItem('time')!]));
   };
 
   useEffect(() => {
@@ -199,6 +204,22 @@ export default function Home() {
               </div>
 
               <div className='flex gap-4'>
+                <Select
+                  className='max-w-32'
+                  label='制限時間'
+                  selectedKeys={select_time}
+                  onSelectionChange={(keys) => {
+                    const tmp = [...keys] as string[];
+                    if (tmp.length > 0) {
+                      setTime(keys);
+                      localStorage.setItem('time', tmp[0]);
+                    }
+                  }}
+                >
+                  <SelectItem key='60s'>60秒</SelectItem>
+                  <SelectItem key='inf'>無制限</SelectItem>
+                </Select>
+
                 <Switch
                   color='success'
                   isSelected={show_roman}
@@ -232,6 +253,7 @@ export default function Home() {
                       'select_subject',
                       'show_roman',
                       'show_word',
+                      'time',
                     ];
                     reset_cookie.forEach((val) => {
                       localStorage.setItem(val, default_storage[val]);

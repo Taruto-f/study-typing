@@ -6,6 +6,7 @@ export const default_storage: Record<string, string> = {
   enable_miss: 'true',
   show_roman: 'true',
   show_word: 'true',
+  time: '60s',
 };
 
 export function reset_storage() {
