@@ -32,6 +32,7 @@ import {
   to_bool,
   btos,
 } from './util';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   // 初期設定類
@@ -86,6 +87,8 @@ export default function Home() {
     init_setting();
   }, [theme, setSeason]);
 
+  const router = useRouter();
+
   return (
     <>
       <div className='py-4'>
@@ -102,6 +105,7 @@ export default function Home() {
                 size='lg'
                 variant='shadow'
                 isDisabled={(select_subject as Set<string>).size === 0}
+                onPress={() => router.replace('/play')}
               >
                 Start
               </Button>

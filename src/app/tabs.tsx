@@ -3,7 +3,8 @@ import { Tabs, Tab, Link } from '@nextui-org/react';
 import { usePathname } from 'next/navigation';
 
 export function TopTab({ children }: { children: React.ReactNode }) {
-  const path = usePathname();
+  let path = usePathname();
+  if (path === '/play') path = '/';
 
   return (
     <>
