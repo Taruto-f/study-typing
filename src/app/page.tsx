@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   CardBody,
+  Chip,
   Divider,
   Select,
   SelectItem,
@@ -15,7 +16,14 @@ import { useTheme } from 'next-themes';
 import { themes } from './theme';
 import { useEffect, useState } from 'react';
 import { default_storage, reset_storage } from './localstorage';
-import { datas, exist_subject, subjects, subjects_select } from './data';
+import {
+  datas,
+  exist_subject,
+  seasons_to_str,
+  subjects,
+  subjects_select,
+  subjects_to_str,
+} from './data';
 import {
   filter_keys,
   only_enable,
@@ -31,7 +39,11 @@ export default function Home() {
 
   const [show_theme, setShowTheme] = useState('system');
   const [select_season, setSeason] = useState<Selection>(new Set([]));
+
+  const [text_season, setTextSeason] = useState<string>('');
+
   const [select_subject, setSubject] = useState<Selection>(new Set([]));
+  const [text_subject, setTextSubject] = useState<string>('');
   const [selectable_subject, setSelectableSubject] = useState<
     Record<string, boolean>
   >(exist_subject(new Set<string>()));
@@ -41,15 +53,20 @@ export default function Home() {
   const [show_word, setShowWord] = useState<boolean>(true);
 
   const init_setting = () => {
-    const new_season = str_to_set<string>(
+    const storage_seaosn = str_to_set<string>(
       localStorage.getItem('select_season')!
     );
-    setSeason(new_season);
+    setSeason(storage_seaosn);
+    setTextSeason(seasons_to_str(storage_seaosn));
 
-    const selectable = exist_subject(new_season);
+    const selectable = exist_subject(storage_seaosn);
     setSelectableSubject(selectable);
 
-    setSubject(str_to_set<string>(localStorage.getItem('select_subject')!));
+    const storage_subject = str_to_set<string>(
+      localStorage.getItem('select_subject')!
+    );
+    setSubject(storage_subject);
+    setTextSubject(subjects_to_str(storage_subject));
 
     setEnableType(to_bool(localStorage.getItem('enable_type')!));
     setEnableMiss(to_bool(localStorage.getItem('enable_miss')!));
@@ -64,14 +81,32 @@ export default function Home() {
     init_setting();
   }, [theme, setSeason]);
 
-  // 設定リセットの警告
-
   return (
     <>
-      <div className='py-5 w-full'>
+      <div className='py-4'>
         <Card>
           <CardBody>
-            <div className='py-20 justify-center items-center flex'></div>
+            <div className='py-4 justify-center items-center flex flex-col gap-4'>
+              <div className='my-4 flex flex-col items-center py-2 gap-2'>
+                <span className='text-3xl font-bold'>{text_season}</span>
+                <span className='text-xl'>{text_subject}</span>
+              </div>
+
+              <Button
+                color='primary'
+                size='lg'
+                variant='shadow'
+                isDisabled={(select_subject as Set<string>).size === 0}
+              >
+                Start
+              </Button>
+
+              {(select_subject as Set<string>).size === 0 && (
+                <Chip color='danger' size='sm' variant='flat'>
+                  少なくとも一つの教科を選択している必要があります
+                </Chip>
+              )}
+            </div>
           </CardBody>
         </Card>
       </div>
@@ -95,13 +130,15 @@ export default function Home() {
                       'select_season',
                       set_to_str(keys as Set<string>)
                     );
+                    setTextSeason(seasons_to_str(keys as Set<string>));
+
                     setSelectableSubject(exist_subject(keys as Set<string>));
-                    setSubject(
-                      only_enable<string>(
-                        select_subject as Set<string>,
-                        exist_subject(keys as Set<string>)
-                      )
+                    const new_subject = only_enable<string>(
+                      select_subject as Set<string>,
+                      exist_subject(keys as Set<string>)
                     );
+                    setSubject(new_subject);
+                    setTextSubject(subjects_to_str(new_subject));
                   }}
                 >
                   {(data) => {
@@ -132,6 +169,7 @@ export default function Home() {
                       'select_subject',
                       set_to_str(keys as Set<string>)
                     );
+                    setTextSubject(subjects_to_str(keys as Set<string>));
                   }}
                 >
                   {(subject) => (
@@ -153,6 +191,7 @@ export default function Home() {
                     });
                     localStorage.setItem('select_subject', set_to_str(tmp));
                     setSubject(tmp);
+                    setTextSubject(subjects_to_str(tmp));
                   }}
                 >
                   全教科を選択
@@ -184,8 +223,6 @@ export default function Home() {
               </div>
 
               <div className='flex gap-4'>
-                {/* <Button onPress={init_setting}>前回の設定を読み込み</Button> */}
-
                 <Button
                   color='danger'
                   variant='ghost'
