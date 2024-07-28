@@ -16,7 +16,14 @@ import { themes } from './theme';
 import { useEffect, useState } from 'react';
 import { default_storage, reset_storage } from './localstorage';
 import { datas, exist_subject, subjects, subjects_select } from './data';
-import { filter_keys, only_enable, set_to_str, str_to_set } from './util';
+import {
+  filter_keys,
+  only_enable,
+  set_to_str,
+  str_to_set,
+  to_bool,
+  btos,
+} from './util';
 
 export default function Home() {
   // 初期設定類
@@ -30,6 +37,8 @@ export default function Home() {
   >(exist_subject(new Set<string>()));
   const [enable_type, setEnableType] = useState<boolean>(true);
   const [enable_miss, setEnableMiss] = useState<boolean>(true);
+  const [show_roman, setShowRoman] = useState<boolean>(true);
+  const [show_word, setShowWord] = useState<boolean>(true);
 
   const init_setting = () => {
     const new_season = str_to_set<string>(
@@ -42,15 +51,17 @@ export default function Home() {
 
     setSubject(str_to_set<string>(localStorage.getItem('select_subject')!));
 
-    setEnableType(localStorage.getItem('enable_type')! === 'true');
-    setEnableMiss(localStorage.getItem('enable_miss')! === 'true');
+    setEnableType(to_bool(localStorage.getItem('enable_type')!));
+    setEnableMiss(to_bool(localStorage.getItem('enable_miss')!));
+
+    setShowRoman(to_bool(localStorage.getItem('show_roman')!));
+    setShowWord(to_bool(localStorage.getItem('show_word')!));
   };
 
   useEffect(() => {
     reset_storage();
     setShowTheme(theme!);
     init_setting();
-    console.log(localStorage);
   }, [theme, setSeason]);
 
   // 設定リセットの警告
@@ -147,11 +158,30 @@ export default function Home() {
                   全教科を選択
                 </Button>
               </div>
-              <p>
-                {[...select_season].join(', ')}:
-                {JSON.stringify(selectable_subject)}
-                {[...select_subject].join(',')}
-              </p>
+
+              <div className='flex gap-4'>
+                <Switch
+                  color='success'
+                  isSelected={show_roman}
+                  onValueChange={(select) => {
+                    setShowRoman(select);
+                    localStorage.setItem('show_roman', btos(select));
+                  }}
+                >
+                  ローマ字を表示
+                </Switch>
+
+                <Switch
+                  color='success'
+                  isSelected={show_word}
+                  onValueChange={(select) => {
+                    setShowWord(select);
+                    localStorage.setItem('show_word', btos(select));
+                  }}
+                >
+                  単語を表示
+                </Switch>
+              </div>
 
               <div className='flex gap-4'>
                 {/* <Button onPress={init_setting}>前回の設定を読み込み</Button> */}
@@ -160,7 +190,12 @@ export default function Home() {
                   color='danger'
                   variant='ghost'
                   onPress={() => {
-                    const reset_cookie = ['select_season', 'select_subject'];
+                    const reset_cookie = [
+                      'select_season',
+                      'select_subject',
+                      'show_roman',
+                      'show_word',
+                    ];
                     reset_cookie.forEach((val) => {
                       localStorage.setItem(val, default_storage[val]);
                     });
@@ -178,10 +213,7 @@ export default function Home() {
                   isSelected={enable_type}
                   onValueChange={(select) => {
                     setEnableType(select);
-                    localStorage.setItem(
-                      'enable_type',
-                      select ? 'true' : 'false'
-                    );
+                    localStorage.setItem('enable_type', btos(select));
                   }}
                   color='success'
                 >
@@ -200,16 +232,13 @@ export default function Home() {
                 >
                   ミス音
                 </Switch>
-
-                <p>{enable_type ? 'true' : 'false'}, </p>
               </div>
 
               <div>
                 <Select
                   label='テーマ'
                   className='max-w-xs'
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  selectedKeys={[show_theme as any]}
+                  selectedKeys={[show_theme]}
                   onSelectionChange={(keys) => {
                     const new_theme = [...keys] as string[];
 

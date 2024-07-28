@@ -4,6 +4,8 @@ export const default_storage: Record<string, string> = {
   select_subject: '',
   enable_type: 'true',
   enable_miss: 'true',
+  show_roman: 'true',
+  show_word: 'true',
 };
 
 export function reset_storage() {
