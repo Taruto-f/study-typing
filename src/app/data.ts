@@ -86,7 +86,6 @@ export const map_data: Record<string, z.infer<typeof Subjects>> = (() => {
 
   return ret;
 })();
-console.log(map_data);
 
 export function exist_subject(
   keys: Set<string>
