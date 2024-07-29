@@ -94,10 +94,10 @@ export default function Home() {
       <div className='py-4'>
         <Card>
           <CardBody>
-            <div className='py-4 justify-center items-center flex flex-col gap-4'>
+            <div className='py-4 justify-center items-center flex flex-col gap-2'>
               <div className='my-4 flex flex-col items-center py-2 gap-2'>
                 <span className='text-3xl font-bold'>{text_season}</span>
-                <span className='text-xl'>{text_subject}</span>
+                <span className='text-lg'>{text_subject}</span>
               </div>
 
               <Button

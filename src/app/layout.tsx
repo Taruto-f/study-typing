@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang='ja' suppressHydrationWarning={true}>
       <body className={notosans.className}>
-        <div className='w-screen h-screen p-8 flex items-start justify-center'>
+        <div className='w-screen h-screen py-4 flex items-start justify-center'>
           <Providers>{children}</Providers>
         </div>
       </body>
