@@ -31,19 +31,19 @@ export default function Play() {
         <Card>
           <CardHeader>
             <div className='flex items-center justify-center w-full'>
-              <p className={`${SourceCodePro.className} text-lg`}>60</p>
+              <p className={`${SourceCodePro.className} text-2xl`}>60</p>
             </div>
           </CardHeader>
           <Divider></Divider>
           <CardBody>
-            <div className='flex flex-col justify-center items-center h-96 gap-4'>
-              <p className='text-xl'>国語</p>
+            <div className='flex flex-col justify-center items-center h-96 gap-5 m-9'>
+              <p className='text-2xl'>国語</p>
               <div className='flex flex-col justify-center items-center m-8'>
-                <h1 className='text-6xl font-bold'>単語</h1>
-                <p className='text-lg'>たんご</p>
+                <h1 className='text-7xl font-bold'>単語</h1>
+                <p className='text-xl'>たんご</p>
               </div>
-              <p className='text-lg'>単語の説明</p>
-              <p className={`${SourceCodePro.className} text-2xl`}>
+              <p className='text-2xl'>単語の説明</p>
+              <p className={`${SourceCodePro.className} text-3xl`}>
                 t<span className='text-default-400'>ango</span>
               </p>
             </div>
@@ -53,6 +53,11 @@ export default function Play() {
             <div className='h-20 flex items-center w-full justify-center space-x-4'>
               <div className='flex flex-col items-center w-full'>
                 <p>得点</p>
+                <p className={`${SourceCodePro.className} text-3xl`}>1</p>
+              </div>
+              <Divider orientation='vertical'></Divider>
+              <div className='flex flex-col items-center w-full'>
+                <p>ストリーク</p>
                 <p className={`${SourceCodePro.className} text-3xl`}>1</p>
               </div>
               <Divider orientation='vertical'></Divider>
