@@ -227,6 +227,7 @@ export default function Home() {
                 <Switch
                   color='success'
                   isSelected={show_roman}
+                  isDisabled={!show_word}
                   onValueChange={(select) => {
                     setShowRoman(select);
                     localStorage.setItem('show_roman', btos(select));
@@ -241,6 +242,11 @@ export default function Home() {
                   onValueChange={(select) => {
                     setShowWord(select);
                     localStorage.setItem('show_word', btos(select));
+
+                    if (!select) {
+                      setShowRoman(false);
+                      localStorage.setItem('show_roman', 'false');
+                    }
                   }}
                 >
                   単語を表示
