@@ -1,20 +1,35 @@
 'use client';
 
 import {
+  Button,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
+  Checkbox,
   Divider,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
 } from '@nextui-org/react';
 import { Source_Code_Pro } from 'next/font/google';
 import { useCallback, useEffect } from 'react';
+import { btos, to_bool } from '../util';
 
 const SourceCodePro = Source_Code_Pro({
   subsets: ['latin'],
 });
 
 export default function Play() {
+  const {
+    isOpen: isHelpOpen,
+    onOpen: onHelpOpen,
+    onOpenChange: onHelpOpenChange,
+  } = useDisclosure();
+
   const keyHand = useCallback((event: KeyboardEvent) => {
     console.log(event.code);
   }, []);
@@ -22,8 +37,12 @@ export default function Play() {
   useEffect(() => {
     document.addEventListener('keydown', keyHand, false);
 
+    if (to_bool(localStorage.getItem('show_help')!)) {
+      onHelpOpen();
+    }
+
     return () => document.removeEventListener('keydown', keyHand);
-  }, [keyHand]);
+  }, [keyHand, onHelpOpen]);
 
   return (
     <>
@@ -69,6 +88,47 @@ export default function Play() {
           </CardFooter>
         </Card>
       </div>
+
+      {/* 説明 */}
+      <Modal isOpen={isHelpOpen} onOpenChange={onHelpOpenChange} size='3xl'>
+        <ModalContent>
+          {(onClose) => {
+            return (
+              <>
+                <ModalHeader>説明</ModalHeader>
+                <ModalBody>
+                  <ul>
+                    <li>
+                      ・表示された単語の
+                      <span className='font-bold underline'>読み</span>
+                      を入力してください。
+                    </li>
+                    <li>
+                      ・連続して正しくタイピングすることでストリークが上がり、得点がより多く得ることができます。
+                    </li>
+                    <li>
+                      ・スペースキーを押すことで、得点を消費して問題をスキップすることが出来ます。
+                    </li>
+                    <li>・キーを打ち始めてから開始です。</li>
+                  </ul>
+                </ModalBody>
+                <ModalFooter>
+                  <Checkbox
+                    onValueChange={(selected) => {
+                      localStorage.setItem('show_help', btos(!selected));
+                    }}
+                  >
+                    今後表示しない
+                  </Checkbox>
+                  <Button onPress={onClose} color='primary' variant='shadow'>
+                    開始
+                  </Button>
+                </ModalFooter>
+              </>
+            );
+          }}
+        </ModalContent>
+      </Modal>
     </>
   );
 }
