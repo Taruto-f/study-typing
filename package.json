@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.6",
-    "framer-motion": "^11.3.17",
+    "framer-motion": "^11.3.19",
     "higgsino": "^1.0.31",
     "next": "14.2.4",
     "next-themes": "^0.3.0",
@@ -28,7 +28,7 @@
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
     "@types/eslint": "^8.56.11",
-    "@types/node": "^20.14.12",
+    "@types/node": "^20.14.13",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
@@ -40,7 +40,7 @@
     "jsdom": "^24.1.1",
     "postcss": "^8.4.40",
     "prettier": "^3.3.3",
-    "tailwindcss": "^3.4.6",
+    "tailwindcss": "^3.4.7",
     "typescript": "^5.5.4",
     "vitest": "^2.0.4"
   }
