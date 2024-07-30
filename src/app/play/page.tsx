@@ -55,7 +55,7 @@ export default function Play() {
           </CardHeader>
           <Divider></Divider>
           <CardBody>
-            <div className='flex flex-col justify-center items-center h-96 gap-5 m-9'>
+            <div className='flex flex-col justify-center items-center h-96 gap-5 m-5'>
               <p className='text-2xl'>国語</p>
               <div className='flex flex-col justify-center items-center m-8'>
                 <h1 className='text-7xl font-bold'>単語</h1>
