@@ -16,8 +16,9 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import { Source_Code_Pro } from 'next/font/google';
-import { useCallback, useEffect } from 'react';
-import { btos, to_bool } from '../util';
+import { useCallback, useEffect, useRef } from 'react';
+import { btos, str_to_set, to_bool } from '../util';
+import { get_words, Words } from '../data';
 
 const SourceCodePro = Source_Code_Pro({
   subsets: ['latin'],
@@ -30,15 +31,29 @@ export default function Play() {
     onOpenChange: onHelpOpenChange,
   } = useDisclosure();
 
+  const words = useRef<Words[]>();
+
+  const once = useRef(true);
+
   const keyHand = useCallback((event: KeyboardEvent) => {
     console.log(event.code);
   }, []);
 
   useEffect(() => {
-    document.addEventListener('keydown', keyHand, false);
+    if (once.current) {
+      document.addEventListener('keydown', keyHand, false);
 
-    if (to_bool(localStorage.getItem('show_help')!)) {
-      onHelpOpen();
+      if (to_bool(localStorage.getItem('show_help')!)) {
+        onHelpOpen();
+      }
+
+      words.current = get_words(
+        str_to_set(localStorage.getItem('select_season')!),
+        str_to_set(localStorage.getItem('select_subject')!)
+      );
+      console.log(words.current);
+
+      once.current = false;
     }
 
     return () => document.removeEventListener('keydown', keyHand);

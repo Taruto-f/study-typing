@@ -32,32 +32,23 @@ export const SeasonData = z.object({
 
 const data_raw: Array<z.infer<typeof SeasonData>> = [
   {
-    year: '小学六年',
-    key: 's1',
-    seasons: [
-      {
-        season: 3,
-        jp: [],
-        math: [],
-        social: [],
-        science: [],
-        english: [],
-      },
-    ],
-  },
-  {
     year: '中学一年',
     key: 'j1',
     seasons: [
       {
         season: 1,
-        jp: [],
-        math: [],
-        social: [],
-        science: [],
-        english: [],
-        pe: [],
-        music: [],
+        math: [
+          {
+            moji: '自然数',
+            yomi: 'しぜんすう',
+            mean: '1以上の整数',
+          },
+          {
+            moji: '素数',
+            yomi: 'そすう',
+            mean: '1とその数自身でしか割り切れない数',
+          },
+        ],
       },
     ],
   },
@@ -148,4 +139,36 @@ export function subjects_to_str(subject: Set<string>): string {
     if (subject.has(key)) ret.push(subject_names[key]);
   });
   return ret.join(', ');
+}
+
+export interface Words extends z.infer<typeof TypeData> {
+  subject: string;
+}
+export function get_words(
+  seasons: Set<string>,
+  subjects_set: Set<string>
+): Words[] {
+  const subjects = [...subjects_set] as SubjectsType[];
+
+  const ans: Words[] = [];
+
+  datas.forEach((val) => {
+    val.seasons.forEach((season) => {
+      if (seasons.has(`${val.key}_${season.season}`)) {
+        subjects.forEach((subject) => {
+          if (season[subject] !== undefined) {
+            const words = season[subject];
+            words.forEach((word) => {
+              ans.push({
+                ...word,
+                subject: subject_names[subject],
+              });
+            });
+          }
+        });
+      }
+    });
+  });
+
+  return ans;
 }
