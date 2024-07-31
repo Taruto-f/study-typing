@@ -14,7 +14,7 @@ import {
 } from '@nextui-org/react';
 import { useTheme } from 'next-themes';
 import { themes } from './theme';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { default_storage, reset_storage } from './localstorage';
 import {
   datas,
@@ -56,6 +56,8 @@ export default function Home() {
   const [show_roman, setShowRoman] = useState<boolean>(true);
   const [show_word, setShowWord] = useState<boolean>(true);
 
+  const once = useRef(true);
+
   const init_setting = () => {
     const storage_seaosn = str_to_set<string>(
       localStorage.getItem('select_season')!
@@ -82,9 +84,13 @@ export default function Home() {
   };
 
   useEffect(() => {
-    reset_storage();
-    setShowTheme(theme!);
-    init_setting();
+    if (once.current) {
+      reset_storage();
+      setShowTheme(theme!);
+      init_setting();
+
+      once.current = false;
+    }
   }, [theme, setSeason]);
 
   const router = useRouter();
