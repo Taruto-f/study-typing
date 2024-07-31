@@ -16,7 +16,9 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import { Source_Code_Pro } from 'next/font/google';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { shuffle } from 'fast-shuffle';
+import { Word } from 'higgsino';
 import { btos, str_to_set, to_bool } from '../util';
 import { get_words, Words } from '../data';
 
@@ -31,7 +33,18 @@ export default function Play() {
     onOpenChange: onHelpOpenChange,
   } = useDisclosure();
 
-  const words = useRef<Words[]>();
+  const words = useRef<Words[]>([]);
+  const [pos, setPos] = useState(-1);
+  const [word, setWord] = useState<Word>(
+    new Word('読み込み中', 'よみこみちゅう')
+  );
+
+  const show_roman = useRef(true);
+  const show_word = useRef(true);
+
+  const [point, _setPoint] = useState(0);
+  const [streak, _setStreak] = useState(0);
+  const [answer, _setAnswer] = useState(0);
 
   const once = useRef(true);
 
@@ -41,20 +54,26 @@ export default function Play() {
 
   useEffect(() => {
     if (once.current) {
-      document.addEventListener('keydown', keyHand, false);
-
       if (to_bool(localStorage.getItem('show_help')!)) {
         onHelpOpen();
       }
 
-      words.current = get_words(
-        str_to_set(localStorage.getItem('select_season')!),
-        str_to_set(localStorage.getItem('select_subject')!)
+      words.current = shuffle(
+        get_words(
+          str_to_set(localStorage.getItem('select_season')!),
+          str_to_set(localStorage.getItem('select_subject')!)
+        )
       );
-      console.log(words.current);
+      setPos(0);
+      setWord(new Word(words.current[0].moji, words.current[0].yomi));
+
+      show_roman.current = to_bool(localStorage.getItem('show_roman')!);
+      show_word.current = to_bool(localStorage.getItem('show_word')!);
 
       once.current = false;
     }
+
+    document.addEventListener('keydown', keyHand, false);
 
     return () => document.removeEventListener('keydown', keyHand);
   }, [keyHand, onHelpOpen]);
@@ -71,14 +90,35 @@ export default function Play() {
           <Divider></Divider>
           <CardBody>
             <div className='flex flex-col justify-center items-center h-96 gap-5 m-5'>
-              <p className='text-2xl'>国語</p>
-              <div className='flex flex-col justify-center items-center m-8'>
-                <h1 className='text-7xl font-bold'>単語</h1>
-                <p className='text-xl'>たんご</p>
+              <p className='text-2xl'>
+                {pos == -1 ? '総合' : words.current[pos].subject}
+              </p>
+              <div className='flex flex-col justify-center items-center m-8 gap-2'>
+                <h1 className='text-7xl font-bold'>
+                  {pos == -1
+                    ? '読み込み中'
+                    : show_word.current
+                      ? words.current[pos].moji
+                      : '???'}
+                </h1>
+                <p className='text-xl'>
+                  {pos == -1
+                    ? 'よみこみちゅう'
+                    : show_word.current
+                      ? words.current[pos].yomi
+                      : '???'}
+                </p>
               </div>
-              <p className='text-2xl'>単語の説明</p>
+              <p className='text-2xl'>
+                {pos == -1
+                  ? 'ゲーム開始のための処理をしています'
+                  : words.current[pos].mean}
+              </p>
               <p className={`${SourceCodePro.className} text-3xl`}>
-                t<span className='text-default-400'>ango</span>
+                <span>{word.roman.typed}</span>
+                {show_roman.current && (
+                  <span className='text-default-400'>{word.roman.untyped}</span>
+                )}
               </p>
             </div>
           </CardBody>
@@ -87,17 +127,21 @@ export default function Play() {
             <div className='h-20 flex items-center w-full justify-center space-x-4'>
               <div className='flex flex-col items-center w-full'>
                 <p>得点</p>
-                <p className={`${SourceCodePro.className} text-3xl`}>1</p>
+                <p className={`${SourceCodePro.className} text-3xl`}>{point}</p>
               </div>
               <Divider orientation='vertical'></Divider>
               <div className='flex flex-col items-center w-full'>
                 <p>ストリーク</p>
-                <p className={`${SourceCodePro.className} text-3xl`}>1</p>
+                <p className={`${SourceCodePro.className} text-3xl`}>
+                  {streak}
+                </p>
               </div>
               <Divider orientation='vertical'></Divider>
               <div className='flex flex-col items-center w-full'>
                 <p>回答数</p>
-                <p className={`${SourceCodePro.className} text-3xl`}>0</p>
+                <p className={`${SourceCodePro.className} text-3xl`}>
+                  {answer}
+                </p>
               </div>
             </div>
           </CardFooter>
