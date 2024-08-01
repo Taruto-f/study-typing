@@ -16,7 +16,7 @@
     "fast-shuffle": "^6.1.0",
     "framer-motion": "^11.3.19",
     "higgsino": "^1.0.31",
-    "next": "14.2.4",
+    "next": "^14.2.5",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -32,8 +32,8 @@
     "@types/node": "^20.14.13",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.17.0",
-    "@typescript-eslint/parser": "^7.17.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.4",
@@ -43,6 +43,6 @@
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.7",
     "typescript": "^5.5.4",
-    "vitest": "^2.0.4"
+    "vitest": "^2.0.5"
   }
 }
