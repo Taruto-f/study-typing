@@ -97,7 +97,7 @@ export default function Play() {
         }
       };
 
-      if (!once.current) {
+      if (!once.current && !isHelpOpen) {
         if (/^[a-z]$/.test(event.key)) {
           const result = word.current.typed(event.key);
           setTyped(word.current.roman.typed);
@@ -137,7 +137,7 @@ export default function Play() {
         }
       }
     },
-    [point, streak, pos, answer, init, key1, key2, key3, miss]
+    [point, streak, pos, answer, init, key1, key2, key3, miss, isHelpOpen]
   );
 
   useEffect(() => {
