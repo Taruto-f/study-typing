@@ -13,6 +13,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Skeleton,
   useDisclosure,
 } from '@nextui-org/react';
 import { Source_Code_Pro } from 'next/font/google';
@@ -59,7 +60,7 @@ export default function Play() {
   const [streak, setStreak] = useState(0);
   const [answer, setAnswer] = useState(0);
 
-  const once = useRef(true);
+  const [once, setOnce] = useState(true);
 
   const [key1] = useSound(key1_mp3, { interrupt: false });
   const [key2] = useSound(key2_mp3, { interrupt: false });
@@ -97,7 +98,7 @@ export default function Play() {
         }
       };
 
-      if (!once.current && !isHelpOpen) {
+      if (!once && !isHelpOpen) {
         if (/^[a-z]$/.test(event.key)) {
           const result = word.current.typed(event.key);
           setTyped(word.current.roman.typed);
@@ -137,11 +138,11 @@ export default function Play() {
         }
       }
     },
-    [point, streak, pos, answer, init, key1, key2, key3, miss, isHelpOpen]
+    [point, streak, pos, answer, init, key1, key2, key3, miss, isHelpOpen, once]
   );
 
   useEffect(() => {
-    if (once.current) {
+    if (once) {
       if (to_bool(localStorage.getItem('show_help')!)) {
         onHelpOpen();
       }
@@ -153,14 +154,13 @@ export default function Play() {
 
       enable_keysound.current = to_bool(localStorage.getItem('enable_type')!);
       enbale_misssound.current = to_bool(localStorage.getItem('enable_miss')!);
-
-      once.current = false;
+      setOnce(false);
     }
 
     document.addEventListener('keydown', keyHandler, false);
 
     return () => document.removeEventListener('keydown', keyHandler);
-  }, [keyHandler, onHelpOpen, init]);
+  }, [keyHandler, onHelpOpen, init, once]);
 
   return (
     <>
@@ -168,36 +168,50 @@ export default function Play() {
         <Card>
           <CardHeader>
             <div className='flex items-center justify-center w-full'>
-              <p className={`${SourceCodePro.className} text-2xl`}>60</p>
+              <Skeleton className='rounded-lg' isLoaded={!once}>
+                <p className={`${SourceCodePro.className} text-2xl`}>60</p>
+              </Skeleton>
             </div>
           </CardHeader>
           <Divider></Divider>
           <CardBody>
             <div className='flex flex-col justify-center items-center h-96 gap-5 m-5'>
-              <p className='text-2xl'>
-                {pos == -1 ? '総合' : words.current[pos].subject}
-              </p>
-              <div className='flex flex-col justify-center items-center m-8 gap-2'>
-                <h1 className='text-7xl font-bold'>
-                  {pos == -1
-                    ? '読み込み中'
-                    : show_word.current
-                      ? words.current[pos].moji
-                      : '???'}
-                </h1>
-                <p className='text-xl'>
-                  {pos == -1
-                    ? 'よみこみちゅう'
-                    : show_word.current
-                      ? words.current[pos].yomi
-                      : '???'}
+              <Skeleton className='rounded-lg' isLoaded={!once}>
+                <p className='text-2xl'>
+                  {pos == -1 ? '総合' : words.current[pos].subject}
                 </p>
+              </Skeleton>
+
+              <div className='flex flex-col justify-center items-center m-8 gap-2'>
+                <Skeleton className='rounded-lg' isLoaded={!once}>
+                  <h1 className='text-7xl font-bold'>
+                    {pos == -1
+                      ? '読み込み中'
+                      : show_word.current
+                        ? words.current[pos].moji
+                        : '???'}
+                  </h1>
+                </Skeleton>
+
+                <Skeleton className='rounded-lg' isLoaded={!once}>
+                  <p className='text-xl'>
+                    {pos == -1
+                      ? 'よみこみちゅう'
+                      : show_word.current
+                        ? words.current[pos].yomi
+                        : '???'}
+                  </p>
+                </Skeleton>
               </div>
-              <p className='text-2xl'>
-                {pos == -1
-                  ? 'ゲーム開始のための処理をしています'
-                  : words.current[pos].mean}
-              </p>
+
+              <Skeleton className='rounded-lg' isLoaded={!once}>
+                <p className='text-2xl'>
+                  {pos == -1
+                    ? 'ゲーム開始のための処理をしています'
+                    : words.current[pos].mean}
+                </p>
+              </Skeleton>
+
               <p className={`${SourceCodePro.className} text-3xl`}>
                 <span>{typed}</span>
                 {show_roman.current && (
