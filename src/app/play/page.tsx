@@ -21,10 +21,21 @@ import { shuffle } from 'fast-shuffle';
 import { Word } from 'higgsino';
 import { btos, str_to_set, to_bool } from '../util';
 import { get_words, Words } from '../data';
+import useSound from 'use-sound';
+import key1_mp3 from '#/key1.mp3';
+import key2_mp3 from '#/key2.mp3';
+import key3_mp3 from '#/key3.mp3';
+import miss_mp3 from '#/miss.mp3';
 
 const SourceCodePro = Source_Code_Pro({
   subsets: ['latin'],
 });
+
+function getRandomInt(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); // 上限は除き、下限は含む
+}
 
 export default function Play() {
   const {
@@ -32,12 +43,14 @@ export default function Play() {
     onOpen: onHelpOpen,
     onOpenChange: onHelpOpenChange,
   } = useDisclosure();
-
   const words = useRef<Words[]>([]);
   const [pos, setPos] = useState(-1);
 
   const show_roman = useRef(true);
   const show_word = useRef(true);
+  const enable_keysound = useRef(true);
+  const enbale_misssound = useRef(true);
+
   const word = useRef(new Word('', ''));
   const [typed, setTyped] = useState('');
   const [untyped, setUntyped] = useState('');
@@ -47,6 +60,11 @@ export default function Play() {
   const [answer, setAnswer] = useState(0);
 
   const once = useRef(true);
+
+  const [key1] = useSound(key1_mp3, { interrupt: false });
+  const [key2] = useSound(key2_mp3, { interrupt: false });
+  const [key3] = useSound(key3_mp3, { interrupt: false });
+  const [miss] = useSound(miss_mp3, { interrupt: false });
 
   const init = useCallback(() => {
     words.current = shuffle(
@@ -79,31 +97,47 @@ export default function Play() {
         }
       };
 
-      if (/^[a-z]$/.test(event.key)) {
-        const result = word.current.typed(event.key);
-        setTyped(word.current.roman.typed);
-        setUntyped(word.current.roman.untyped);
+      if (!once.current) {
+        if (/^[a-z]$/.test(event.key)) {
+          const result = word.current.typed(event.key);
+          setTyped(word.current.roman.typed);
+          setUntyped(word.current.roman.untyped);
 
-        if (!result.isMiss) {
-          setStreak(streak + 1);
-          setPoint(point + Math.ceil((streak + 1) / 6));
-        } else {
+          if (!result.isMiss) {
+            setStreak(streak + 1);
+            setPoint(point + Math.ceil((streak + 1) / 6));
+
+            if (enable_keysound.current) {
+              const sound = getRandomInt(0, 3);
+              if (sound === 0) key1();
+              else if (sound === 1) key2();
+              else if (sound === 2) key3();
+            }
+          } else {
+            setStreak(0);
+
+            if (enbale_misssound.current) {
+              miss();
+            }
+          }
+
+          if (result.isFinish) {
+            setAnswer(answer + 1);
+            next();
+          }
+        } else if (event.code === 'Space') {
+          setPoint(Math.round(point / 2));
           setStreak(0);
-        }
 
-        if (result.isFinish) {
-          setAnswer(answer + 1);
+          if (enbale_misssound.current) {
+            miss();
+          }
+
           next();
         }
-      } else if (event.code === 'Space') {
-        setPoint(Math.round(point / 2));
-        setStreak(0);
-        next();
       }
-
-      console.log(event.code, event.key);
     },
-    [point, streak, pos, answer, init]
+    [point, streak, pos, answer, init, key1, key2, key3, miss]
   );
 
   useEffect(() => {
@@ -116,6 +150,9 @@ export default function Play() {
 
       show_roman.current = to_bool(localStorage.getItem('show_roman')!);
       show_word.current = to_bool(localStorage.getItem('show_word')!);
+
+      enable_keysound.current = to_bool(localStorage.getItem('enable_type')!);
+      enbale_misssound.current = to_bool(localStorage.getItem('enable_miss')!);
 
       once.current = false;
     }
