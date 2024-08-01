@@ -35,22 +35,76 @@ export default function Play() {
 
   const words = useRef<Words[]>([]);
   const [pos, setPos] = useState(-1);
-  const [word, setWord] = useState<Word>(
-    new Word('読み込み中', 'よみこみちゅう')
-  );
 
   const show_roman = useRef(true);
   const show_word = useRef(true);
+  const word = useRef(new Word('', ''));
+  const [typed, setTyped] = useState('');
+  const [untyped, setUntyped] = useState('');
 
-  const [point, _setPoint] = useState(0);
-  const [streak, _setStreak] = useState(0);
-  const [answer, _setAnswer] = useState(0);
+  const [point, setPoint] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [answer, setAnswer] = useState(0);
 
   const once = useRef(true);
 
-  const keyHand = useCallback((event: KeyboardEvent) => {
-    console.log(event.code);
+  const init = useCallback(() => {
+    words.current = shuffle(
+      get_words(
+        str_to_set(localStorage.getItem('select_season')!),
+        str_to_set(localStorage.getItem('select_subject')!)
+      )
+    );
+    setPos(0);
+    word.current = new Word(words.current[0].moji, words.current[0].yomi);
+    setTyped('');
+    setUntyped(word.current.roman.untyped);
   }, []);
+
+  const keyHandler = useCallback(
+    (event: KeyboardEvent) => {
+      const next = () => {
+        const new_pos = pos + 1;
+        if (new_pos < words.current.length) {
+          setPos(new_pos);
+          word.current = new Word(
+            words.current[new_pos].moji,
+            words.current[new_pos].yomi
+          );
+          setTyped('');
+          setUntyped(word.current.roman.untyped);
+        } else {
+          setPos(0);
+          init();
+        }
+      };
+
+      if (/^[a-z]$/.test(event.key)) {
+        const result = word.current.typed(event.key);
+        setTyped(word.current.roman.typed);
+        setUntyped(word.current.roman.untyped);
+
+        if (!result.isMiss) {
+          setStreak(streak + 1);
+          setPoint(point + Math.ceil((streak + 1) / 6));
+        } else {
+          setStreak(0);
+        }
+
+        if (result.isFinish) {
+          setAnswer(answer + 1);
+          next();
+        }
+      } else if (event.code === 'Space') {
+        setPoint(Math.round(point / 2));
+        setStreak(0);
+        next();
+      }
+
+      console.log(event.code, event.key);
+    },
+    [point, streak, pos, answer, init]
+  );
 
   useEffect(() => {
     if (once.current) {
@@ -58,14 +112,7 @@ export default function Play() {
         onHelpOpen();
       }
 
-      words.current = shuffle(
-        get_words(
-          str_to_set(localStorage.getItem('select_season')!),
-          str_to_set(localStorage.getItem('select_subject')!)
-        )
-      );
-      setPos(0);
-      setWord(new Word(words.current[0].moji, words.current[0].yomi));
+      init();
 
       show_roman.current = to_bool(localStorage.getItem('show_roman')!);
       show_word.current = to_bool(localStorage.getItem('show_word')!);
@@ -73,10 +120,10 @@ export default function Play() {
       once.current = false;
     }
 
-    document.addEventListener('keydown', keyHand, false);
+    document.addEventListener('keydown', keyHandler, false);
 
-    return () => document.removeEventListener('keydown', keyHand);
-  }, [keyHand, onHelpOpen]);
+    return () => document.removeEventListener('keydown', keyHandler);
+  }, [keyHandler, onHelpOpen, init]);
 
   return (
     <>
@@ -115,9 +162,9 @@ export default function Play() {
                   : words.current[pos].mean}
               </p>
               <p className={`${SourceCodePro.className} text-3xl`}>
-                <span>{word.roman.typed}</span>
+                <span>{typed}</span>
                 {show_roman.current && (
-                  <span className='text-default-400'>{word.roman.untyped}</span>
+                  <span className='text-default-400'>{untyped}</span>
                 )}
               </p>
             </div>
