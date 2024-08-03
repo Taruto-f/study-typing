@@ -91,8 +91,8 @@ export default function Play() {
   const [key3] = useSound(key3_mp3, { interrupt: false });
   const [miss] = useSound(miss_mp3, { interrupt: false });
 
-  const { totalSeconds, isRunning, start } = useTimer({
-    expiryTimestamp: set_sec(Number(localStorage.getItem('time')!)),
+  const { totalSeconds, isRunning, restart } = useTimer({
+    expiryTimestamp: set_sec(60),
     autoStart: false,
     onExpire: onResultOpen,
   });
@@ -130,7 +130,7 @@ export default function Play() {
 
       if (inited && !isHelpOpen && !isResultOpen) {
         if (/^[a-z]$/.test(event.key)) {
-          if (!isRunning) start();
+          if (!isRunning) restart(set_sec(time.current));
 
           const result = word.current.typed(event.key);
           setTyped(word.current.roman.typed);
@@ -185,8 +185,8 @@ export default function Play() {
       isHelpOpen,
       inited,
       isRunning,
-      start,
       isResultOpen,
+      restart,
     ]
   );
 
