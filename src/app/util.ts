@@ -47,3 +47,5 @@ export function to_bool(str: string) {
 export function btos(bool: boolean) {
   return bool ? 'true' : 'false';
 }
+
+export const inf_timer = '999999999';
