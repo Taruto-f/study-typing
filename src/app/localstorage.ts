@@ -6,7 +6,7 @@ export const default_storage: Record<string, string> = {
   enable_miss: 'true',
   show_roman: 'true',
   show_word: 'true',
-  time: '60s',
+  time: '60',
   show_help: 'true',
 };
 

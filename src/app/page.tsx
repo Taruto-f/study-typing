@@ -14,7 +14,7 @@ import {
 } from '@nextui-org/react';
 import { useTheme } from 'next-themes';
 import { themes } from './theme';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { default_storage, reset_storage } from './localstorage';
 import {
   datas,
@@ -31,6 +31,7 @@ import {
   str_to_set,
   to_bool,
   btos,
+  inf_timer,
 } from './util';
 import { useRouter } from 'next/navigation';
 
@@ -49,14 +50,12 @@ export default function Home() {
     Record<string, boolean>
   >(exist_subject(new Set<string>()));
 
-  const [select_time, setTime] = useState<Selection>(new Set<string>(['60s']));
+  const [select_time, setTime] = useState<Selection>(new Set<string>(['60']));
 
   const [enable_type, setEnableType] = useState<boolean>(true);
   const [enable_miss, setEnableMiss] = useState<boolean>(true);
   const [show_roman, setShowRoman] = useState<boolean>(true);
   const [show_word, setShowWord] = useState<boolean>(true);
-
-  const once = useRef(true);
 
   const init_setting = () => {
     const storage_seaosn = str_to_set<string>(
@@ -84,13 +83,9 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (once.current) {
-      reset_storage();
-      setShowTheme(theme!);
-      init_setting();
-
-      once.current = false;
-    }
+    reset_storage();
+    setShowTheme(theme!);
+    init_setting();
   }, [theme, setSeason]);
 
   const router = useRouter();
@@ -226,8 +221,9 @@ export default function Home() {
                     }
                   }}
                 >
-                  <SelectItem key='60s'>60秒</SelectItem>
-                  <SelectItem key='inf'>無制限</SelectItem>
+                  <SelectItem key='2'>test</SelectItem>
+                  <SelectItem key='60'>60秒</SelectItem>
+                  <SelectItem key={inf_timer}>無制限</SelectItem>
                 </Select>
 
                 <Switch

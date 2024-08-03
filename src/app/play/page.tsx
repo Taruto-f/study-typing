@@ -20,13 +20,16 @@ import { Source_Code_Pro } from 'next/font/google';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { shuffle } from 'fast-shuffle';
 import { Word } from 'higgsino';
-import { btos, str_to_set, to_bool } from '../util';
+import { btos, inf_timer, str_to_set, to_bool } from '../util';
 import { get_words, Words } from '../data';
 import useSound from 'use-sound';
 import key1_mp3 from '#/key1.mp3';
 import key2_mp3 from '#/key2.mp3';
 import key3_mp3 from '#/key3.mp3';
 import miss_mp3 from '#/miss.mp3';
+import { useTimer } from 'react-timer-hook';
+import Value from '@/components/value';
+import { useRouter } from 'next/navigation';
 
 const SourceCodePro = Source_Code_Pro({
   subsets: ['latin'],
@@ -38,12 +41,26 @@ function getRandomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min) + min); // 上限は除き、下限は含む
 }
 
+function set_sec(sec: number) {
+  const time = new Date();
+  time.setSeconds(time.getSeconds() + sec);
+  return time;
+}
+
 export default function Play() {
   const {
     isOpen: isHelpOpen,
     onOpen: onHelpOpen,
     onOpenChange: onHelpOpenChange,
   } = useDisclosure();
+  const router = useRouter();
+
+  const {
+    isOpen: isResultOpen,
+    onOpen: onResultOpen,
+    onOpenChange: onResultOpenChange,
+  } = useDisclosure();
+
   const words = useRef<Words[]>([]);
   const [pos, setPos] = useState(-1);
 
@@ -51,6 +68,7 @@ export default function Play() {
   const show_word = useRef(true);
   const enable_keysound = useRef(true);
   const enbale_misssound = useRef(true);
+  const time_infinity = useRef(false);
 
   const word = useRef(new Word('', ''));
   const [typed, setTyped] = useState('');
@@ -60,12 +78,24 @@ export default function Play() {
   const [streak, setStreak] = useState(0);
   const [answer, setAnswer] = useState(0);
 
-  const [once, setOnce] = useState(true);
+  const [inited, setInited] = useState(false);
 
+  // results
+  const key_cnt = useRef(0);
+  const miss_cnt = useRef(0);
+  const time = useRef(60);
+
+  // sounds
   const [key1] = useSound(key1_mp3, { interrupt: false });
   const [key2] = useSound(key2_mp3, { interrupt: false });
   const [key3] = useSound(key3_mp3, { interrupt: false });
   const [miss] = useSound(miss_mp3, { interrupt: false });
+
+  const { totalSeconds, isRunning, start } = useTimer({
+    expiryTimestamp: set_sec(Number(localStorage.getItem('time')!)),
+    autoStart: false,
+    onExpire: onResultOpen,
+  });
 
   const init = useCallback(() => {
     words.current = shuffle(
@@ -98,8 +128,10 @@ export default function Play() {
         }
       };
 
-      if (!once && !isHelpOpen) {
+      if (inited && !isHelpOpen && !isResultOpen) {
         if (/^[a-z]$/.test(event.key)) {
+          if (!isRunning) start();
+
           const result = word.current.typed(event.key);
           setTyped(word.current.roman.typed);
           setUntyped(word.current.roman.untyped);
@@ -107,6 +139,7 @@ export default function Play() {
           if (!result.isMiss) {
             setStreak(streak + 1);
             setPoint(point + Math.ceil((streak + 1) / 6));
+            key_cnt.current++;
 
             if (enable_keysound.current) {
               const sound = getRandomInt(0, 3);
@@ -116,6 +149,7 @@ export default function Play() {
             }
           } else {
             setStreak(0);
+            miss_cnt.current++;
 
             if (enbale_misssound.current) {
               miss();
@@ -138,11 +172,26 @@ export default function Play() {
         }
       }
     },
-    [point, streak, pos, answer, init, key1, key2, key3, miss, isHelpOpen, once]
+    [
+      point,
+      streak,
+      pos,
+      answer,
+      init,
+      key1,
+      key2,
+      key3,
+      miss,
+      isHelpOpen,
+      inited,
+      isRunning,
+      start,
+      isResultOpen,
+    ]
   );
 
   useEffect(() => {
-    if (once) {
+    if (!inited) {
       if (to_bool(localStorage.getItem('show_help')!)) {
         onHelpOpen();
       }
@@ -154,13 +203,17 @@ export default function Play() {
 
       enable_keysound.current = to_bool(localStorage.getItem('enable_type')!);
       enbale_misssound.current = to_bool(localStorage.getItem('enable_miss')!);
-      setOnce(false);
+
+      time.current = Number(localStorage.getItem('time')!);
+      time_infinity.current = String(time.current) == inf_timer;
+
+      setInited(true);
     }
 
     document.addEventListener('keydown', keyHandler, false);
 
     return () => document.removeEventListener('keydown', keyHandler);
-  }, [keyHandler, onHelpOpen, init, once]);
+  }, [keyHandler, onHelpOpen, init, inited]);
 
   return (
     <>
@@ -168,22 +221,24 @@ export default function Play() {
         <Card>
           <CardHeader>
             <div className='flex items-center justify-center w-full'>
-              <Skeleton className='rounded-lg' isLoaded={!once}>
-                <p className={`${SourceCodePro.className} text-2xl`}>60</p>
+              <Skeleton className='rounded-lg' isLoaded={inited}>
+                <p className={`${SourceCodePro.className} text-2xl`}>
+                  {time_infinity.current ? 'Infinity' : totalSeconds}
+                </p>
               </Skeleton>
             </div>
           </CardHeader>
           <Divider></Divider>
           <CardBody>
             <div className='flex flex-col justify-center items-center h-96 gap-5 m-5'>
-              <Skeleton className='rounded-lg' isLoaded={!once}>
+              <Skeleton className='rounded-lg' isLoaded={inited}>
                 <p className='text-2xl'>
                   {pos == -1 ? '総合' : words.current[pos].subject}
                 </p>
               </Skeleton>
 
               <div className='flex flex-col justify-center items-center m-8 gap-2'>
-                <Skeleton className='rounded-lg' isLoaded={!once}>
+                <Skeleton className='rounded-lg' isLoaded={inited}>
                   <h1 className='text-7xl font-bold'>
                     {pos == -1
                       ? '読み込み中'
@@ -193,7 +248,7 @@ export default function Play() {
                   </h1>
                 </Skeleton>
 
-                <Skeleton className='rounded-lg' isLoaded={!once}>
+                <Skeleton className='rounded-lg' isLoaded={inited}>
                   <p className='text-xl'>
                     {pos == -1
                       ? 'よみこみちゅう'
@@ -204,7 +259,7 @@ export default function Play() {
                 </Skeleton>
               </div>
 
-              <Skeleton className='rounded-lg' isLoaded={!once}>
+              <Skeleton className='rounded-lg' isLoaded={inited}>
                 <p className='text-2xl'>
                   {pos == -1
                     ? 'ゲーム開始のための処理をしています'
@@ -223,24 +278,11 @@ export default function Play() {
           <Divider></Divider>
           <CardFooter>
             <div className='h-20 flex items-center w-full justify-center space-x-4'>
-              <div className='flex flex-col items-center w-full'>
-                <p>得点</p>
-                <p className={`${SourceCodePro.className} text-3xl`}>{point}</p>
-              </div>
+              <Value label='得点' val={point}></Value>
               <Divider orientation='vertical'></Divider>
-              <div className='flex flex-col items-center w-full'>
-                <p>ストリーク</p>
-                <p className={`${SourceCodePro.className} text-3xl`}>
-                  {streak}
-                </p>
-              </div>
+              <Value label='ストリーク' val={streak}></Value>
               <Divider orientation='vertical'></Divider>
-              <div className='flex flex-col items-center w-full'>
-                <p>回答数</p>
-                <p className={`${SourceCodePro.className} text-3xl`}>
-                  {answer}
-                </p>
-              </div>
+              <Value label='回答数' val={answer}></Value>
             </div>
           </CardFooter>
         </Card>
@@ -284,6 +326,47 @@ export default function Play() {
               </>
             );
           }}
+        </ModalContent>
+      </Modal>
+
+      {/* 結果 */}
+      <Modal
+        isOpen={isResultOpen}
+        onOpenChange={onResultOpenChange}
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        hideCloseButton={true}
+      >
+        <ModalContent>
+          <ModalHeader>結果</ModalHeader>
+          <ModalBody>
+            <div className='grid grid-cols-2 gap-y-4'>
+              <Value label='得点' val={point}></Value>
+              <Value label='回答数' val={answer}></Value>
+              <Value label='正しく打った回数' val={key_cnt.current}></Value>
+              <Value
+                label='打/sec'
+                val={(key_cnt.current / time.current).toFixed(1)}
+              ></Value>
+              <Value label='ミス回数' val={miss_cnt.current}></Value>
+              <Value
+                label='正確率'
+                val={`${((key_cnt.current / (key_cnt.current + miss_cnt.current)) * 100).toFixed(1)}%`}
+              ></Value>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button size='lg' onPress={() => router.replace('/')}>
+              ホーム
+            </Button>
+            <Button
+              size='lg'
+              color='primary'
+              onPress={() => window.location.reload()}
+            >
+              もう一度やる
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
