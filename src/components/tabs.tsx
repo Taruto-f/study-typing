@@ -4,12 +4,12 @@ import { usePathname } from 'next/navigation';
 
 export function TopTab({ children }: { children: React.ReactNode }) {
   const path = usePathname();
-  const nottaburl = new Set(['/play']);
+  const taburl = new Set(['/', '/data']);
 
   return (
     <>
       <div className='flex w-screen px-5 flex-col'>
-        {!nottaburl.has(path) && (
+        {taburl.has(path) && (
           <div className='flex gap-4 items-center'>
             <Link
               className='text-xl text-justify font-bold'

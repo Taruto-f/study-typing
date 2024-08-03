@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
-import { Noto_Sans_JP } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers';
+import { NotoSansJP } from '@/utils/fonts';
 
 // const inter = Inter({ subsets: ["latin"] });
-const notosans = Noto_Sans_JP({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Study Typing',
   description: '勉強タイピングアプリ',
@@ -17,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='ja' suppressHydrationWarning={true}>
-      <body className={notosans.className}>
+      <body className={NotoSansJP.className}>
         <div className='w-screen h-screen py-4 flex items-start justify-center'>
           <Providers>{children}</Providers>
         </div>

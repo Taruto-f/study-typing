@@ -16,7 +16,6 @@ import {
   Skeleton,
   useDisclosure,
 } from '@nextui-org/react';
-import { Source_Code_Pro } from 'next/font/google';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { shuffle } from 'fast-shuffle';
 import { Word } from 'higgsino';
@@ -30,10 +29,7 @@ import miss_mp3 from '#/miss.mp3';
 import { useTimer } from 'react-timer-hook';
 import Value from '@/components/value';
 import { useRouter } from 'next/navigation';
-
-const SourceCodePro = Source_Code_Pro({
-  subsets: ['latin'],
-});
+import { SourceCodePro } from '@/utils/fonts';
 
 function getRandomInt(min: number, max: number) {
   min = Math.ceil(min);
