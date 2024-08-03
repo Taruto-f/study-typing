@@ -79,6 +79,7 @@ export default function Play() {
   const [answer, setAnswer] = useState(0);
 
   const [inited, setInited] = useState(false);
+  const [started, setStarted] = useState(false);
 
   // results
   const key_cnt = useRef(0);
@@ -130,7 +131,10 @@ export default function Play() {
 
       if (inited && !isHelpOpen && !isResultOpen) {
         if (/^[a-z]$/.test(event.key)) {
-          if (!isRunning) restart(set_sec(time.current));
+          if (!isRunning) {
+            restart(set_sec(time.current));
+            setStarted(true);
+          }
 
           const result = word.current.typed(event.key);
           setTyped(word.current.roman.typed);
@@ -223,7 +227,11 @@ export default function Play() {
             <div className='flex items-center justify-center w-full'>
               <Skeleton className='rounded-lg' isLoaded={inited}>
                 <p className={`${SourceCodePro.className} text-2xl`}>
-                  {time_infinity.current ? 'Infinity' : totalSeconds}
+                  {time_infinity.current
+                    ? 'Infinity'
+                    : started
+                      ? totalSeconds
+                      : time.current}
                 </p>
               </Skeleton>
             </div>
