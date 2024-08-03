@@ -1,4 +1,4 @@
-import { set_to_str } from '@/app/util';
+import { set_to_str } from '@/utils/util';
 import { faker } from '@faker-js/faker';
 
 test('シンプル', () => {

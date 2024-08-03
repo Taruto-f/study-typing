@@ -1,4 +1,4 @@
-import { TopTab } from '@/app/tabs';
+import { TopTab } from '@/components/tabs';
 import { render, screen } from '@testing-library/react';
 
 test('タブチェック', () => {

@@ -13,9 +13,9 @@ import {
   Switch,
 } from '@nextui-org/react';
 import { useTheme } from 'next-themes';
-import { themes } from './theme';
+import { themes } from '@/utils/theme';
 import { useEffect, useState } from 'react';
-import { default_storage, reset_storage } from './localstorage';
+import { default_storage, reset_storage } from '@/utils/localstorage';
 import {
   datas,
   exist_subject,
@@ -23,7 +23,7 @@ import {
   subjects,
   subjects_select,
   subjects_to_str,
-} from './data';
+} from '@/utils/data';
 import {
   filter_keys,
   only_enable,
@@ -32,7 +32,7 @@ import {
   to_bool,
   btos,
   inf_timer,
-} from './util';
+} from '@/utils/util';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {

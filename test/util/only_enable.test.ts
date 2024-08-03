@@ -1,4 +1,4 @@
-import { only_enable } from '@/app/util';
+import { only_enable } from '@/utils/util';
 import { faker } from '@faker-js/faker';
 
 test('該当なし', () => {
