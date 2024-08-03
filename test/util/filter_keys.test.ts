@@ -1,4 +1,4 @@
-import { filter_keys } from '@/app/util';
+import { filter_keys } from '@/utils/util';
 
 test('該当なし', () => {
   const dat: Record<string, number> = {
