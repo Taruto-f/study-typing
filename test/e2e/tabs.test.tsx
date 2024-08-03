@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 
 test('タブチェック', () => {
   render(
-    <TopTab>
+    <TopTab force>
       <span>test</span>
     </TopTab>
   );
