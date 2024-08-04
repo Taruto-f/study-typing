@@ -7,6 +7,7 @@ import {
   CardFooter,
   CardHeader,
   Checkbox,
+  Chip,
   Divider,
   Modal,
   ModalBody,
@@ -29,7 +30,11 @@ import miss_mp3 from '#/miss.mp3';
 import { useTimer } from 'react-timer-hook';
 import Value from '@/components/value';
 import { useRouter } from 'next/navigation';
-import { SourceCodePro } from '@/utils/fonts';
+import { Source_Code_Pro } from 'next/font/google';
+
+const SourceCodePro = Source_Code_Pro({
+  subsets: ['latin'],
+});
 
 function getRandomInt(min: number, max: number) {
   min = Math.ceil(min);
@@ -82,13 +87,15 @@ export default function Play() {
   const miss_cnt = useRef(0);
   const time = useRef(60);
 
+  const cancel = useRef(false);
+
   // sounds
   const [key1] = useSound(key1_mp3, { interrupt: false });
   const [key2] = useSound(key2_mp3, { interrupt: false });
   const [key3] = useSound(key3_mp3, { interrupt: false });
   const [miss] = useSound(miss_mp3, { interrupt: false });
 
-  const { totalSeconds, isRunning, restart } = useTimer({
+  const { totalSeconds, isRunning, restart, pause } = useTimer({
     expiryTimestamp: set_sec(60),
     autoStart: false,
     onExpire: onResultOpen,
@@ -169,6 +176,10 @@ export default function Play() {
           }
 
           next();
+        } else if (event.code === 'Escape') {
+          pause();
+          cancel.current = true;
+          onResultOpen();
         }
       }
     },
@@ -187,6 +198,8 @@ export default function Play() {
       isRunning,
       isResultOpen,
       restart,
+      pause,
+      onResultOpen,
     ]
   );
 
@@ -312,6 +325,7 @@ export default function Play() {
                     <li>
                       ・スペースキーを押すことで、得点を消費して問題をスキップすることが出来ます。
                     </li>
+                    <li>・Escキーを押すことで、中断することが出来ます。</li>
                     <li>・キーを打ち始めてから開始です。</li>
                   </ul>
                 </ModalBody>
@@ -350,14 +364,27 @@ export default function Play() {
               <Value label='正しく打った回数' val={key_cnt.current}></Value>
               <Value
                 label='打/sec'
-                val={(key_cnt.current / time.current).toFixed(1)}
+                val={
+                  cancel.current
+                    ? '-'
+                    : (key_cnt.current / time.current).toFixed(1)
+                }
               ></Value>
               <Value label='ミス回数' val={miss_cnt.current}></Value>
               <Value
                 label='正確率'
-                val={`${((key_cnt.current / (key_cnt.current + miss_cnt.current)) * 100).toFixed(1)}%`}
+                val={
+                  key_cnt.current + miss_cnt.current !== 0
+                    ? `${((key_cnt.current / (key_cnt.current + miss_cnt.current)) * 100).toFixed(1)}%`
+                    : '-'
+                }
               ></Value>
             </div>
+            {cancel.current && (
+              <div className='flex flex-col items-center justify-center w-full'>
+                <Chip variant='flat'>今回の結果は反映されません</Chip>
+              </div>
+            )}
           </ModalBody>
           <ModalFooter>
             <Button size='lg' onPress={() => router.replace('/')}>
