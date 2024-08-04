@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from '@/components/providers';
-import { NotoSansJP } from '@/utils/fonts';
+import { Noto_Sans_JP } from 'next/font/google';
+
+const NotoSansJP = Noto_Sans_JP({
+  subsets: ['latin'],
+});
 
 // const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
