@@ -133,7 +133,7 @@ export default function Play() {
       };
 
       if (inited && !isHelpOpen && !isResultOpen) {
-        if (/^[a-z]$/.test(event.key)) {
+        if (/^[a-z0-9-]$/.test(event.key)) {
           if (!isRunning) {
             restart(set_sec(time.current));
             setStarted(true);
