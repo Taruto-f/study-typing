@@ -9,6 +9,10 @@ import {
   Checkbox,
   Chip,
   Divider,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Modal,
   ModalBody,
   ModalContent,
@@ -31,6 +35,7 @@ import { useTimer } from 'react-timer-hook';
 import Value from '@/components/value';
 import { useRouter } from 'next/navigation';
 import { Source_Code_Pro } from 'next/font/google';
+import { gen_url, share_text, x, line } from '@/utils/share';
 
 const SourceCodePro = Source_Code_Pro({
   subsets: ['latin'],
@@ -89,6 +94,7 @@ export default function Play() {
   const time = useRef(60);
 
   const cancel = useRef(false);
+  const share_url = useRef('https://example.com');
 
   // sounds
   const [key1] = useSound(key1_mp3, { interrupt: false });
@@ -227,6 +233,14 @@ export default function Play() {
       time.current = Number(localStorage.getItem('time')!);
       time_infinity.current = String(time.current) == inf_timer;
 
+      share_url.current = gen_url(
+        localStorage.getItem('select_season')!,
+        localStorage.getItem('select_subject')!,
+        show_roman.current,
+        show_word.current,
+        time.current
+      );
+
       setInited(true);
     }
 
@@ -361,6 +375,7 @@ export default function Play() {
         isDismissable={false}
         isKeyboardDismissDisabled={true}
         hideCloseButton={true}
+        size='lg'
       >
         <ModalContent>
           <ModalHeader>結果</ModalHeader>
@@ -397,16 +412,44 @@ export default function Play() {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button size='lg' onPress={() => router.replace('/')}>
-              ホーム
-            </Button>
-            <Button
-              size='lg'
-              color='primary'
-              onPress={() => window.location.reload()}
-            >
-              もう一度やる
-            </Button>
+            <div className='flex w-full'>
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button size='lg' isDisabled={cancel.current}>
+                    シェア
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem
+                    key='x'
+                    href={x(share_text(point), share_url.current)}
+                    target='_about'
+                  >
+                    X(Twitter)
+                  </DropdownItem>
+                  <DropdownItem
+                    key='line'
+                    href={line(share_text(point), share_url.current)}
+                    target='_about'
+                  >
+                    LINE
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+
+              <div className='ml-auto flex gap-4'>
+                <Button size='lg' onPress={() => router.replace('/')}>
+                  ホーム
+                </Button>
+                <Button
+                  size='lg'
+                  color='primary'
+                  onPress={() => window.location.reload()}
+                >
+                  もう一度やる
+                </Button>
+              </div>
+            </div>
           </ModalFooter>
         </ModalContent>
       </Modal>
