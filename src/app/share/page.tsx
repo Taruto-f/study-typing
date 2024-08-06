@@ -30,8 +30,8 @@ function Param() {
       }
     }
 
-    // if (ok) router.replace('/play');
-    // else router.replace('/');
+    if (ok) router.replace('/play');
+    else router.replace('/');
   });
 
   return (
