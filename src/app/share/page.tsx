@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 
 function Param() {
   const params = useSearchParams();
@@ -30,13 +30,21 @@ function Param() {
       }
     }
 
-    if (ok) router.replace('/play');
-    else router.replace('/');
+    // if (ok) router.replace('/play');
+    // else router.replace('/');
   });
 
-  return null;
+  return (
+    <div className='absolute inset-0 w-full flex flex-col items-center justify-center'>
+      <p className='font-bold text-3xl'>Loading...</p>
+    </div>
+  );
 }
 
 export default function Share() {
-  return <Param></Param>;
+  return (
+    <Suspense>
+      <Param />
+    </Suspense>
+  );
 }
