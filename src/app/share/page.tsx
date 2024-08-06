@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
-export default function Share() {
+function Param() {
   const params = useSearchParams();
   const router = useRouter();
 
@@ -35,4 +35,8 @@ export default function Share() {
   });
 
   return null;
+}
+
+export default function Share() {
+  return <Param></Param>;
 }
