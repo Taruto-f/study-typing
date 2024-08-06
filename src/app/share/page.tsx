@@ -16,6 +16,8 @@ export default function Share() {
       time: params.get('time'),
     };
 
+    if (data.show_word === 'false') data.show_roman = 'false';
+
     const key = Object.keys(data) as (keyof typeof data)[];
     let ok = true;
     for (let i = 0; i < key.length; ++i) {
