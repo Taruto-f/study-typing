@@ -85,6 +85,7 @@ export default function Play() {
   // results
   const key_cnt = useRef(0);
   const miss_cnt = useRef(0);
+  const skip_cnt = useRef(0);
   const time = useRef(60);
 
   const cancel = useRef(false);
@@ -170,6 +171,12 @@ export default function Play() {
         } else if (event.code === 'Space') {
           setPoint(Math.round(point / 2));
           setStreak(0);
+          skip_cnt.current++;
+
+          if (!isRunning) {
+            restart(set_sec(time.current));
+            setStarted(true);
+          }
 
           if (enbale_misssound.current) {
             miss();
@@ -358,27 +365,30 @@ export default function Play() {
         <ModalContent>
           <ModalHeader>結果</ModalHeader>
           <ModalBody>
-            <div className='grid grid-cols-2 gap-y-4'>
+            <div className='flex flex-col items-center justify-center w-full gap-y-4'>
               <Value label='得点' val={point}></Value>
-              <Value label='回答数' val={answer}></Value>
-              <Value label='正しく打った回数' val={key_cnt.current}></Value>
-              <Value
-                label='打/sec'
-                val={
-                  cancel.current
-                    ? '-'
-                    : (key_cnt.current / time.current).toFixed(1)
-                }
-              ></Value>
-              <Value label='ミス回数' val={miss_cnt.current}></Value>
-              <Value
-                label='正確率'
-                val={
-                  key_cnt.current + miss_cnt.current !== 0
-                    ? `${((key_cnt.current / (key_cnt.current + miss_cnt.current)) * 100).toFixed(1)}%`
-                    : '-'
-                }
-              ></Value>
+              <div className='grid grid-cols-2 gap-y-4'>
+                <Value label='回答数' val={answer}></Value>
+                <Value label='スキップ回数' val={skip_cnt.current}></Value>
+                <Value label='正しく打った回数' val={key_cnt.current}></Value>
+                <Value label='ミス回数' val={miss_cnt.current}></Value>
+                <Value
+                  label='打/sec'
+                  val={
+                    cancel.current
+                      ? '-'
+                      : (key_cnt.current / time.current).toFixed(1)
+                  }
+                ></Value>
+                <Value
+                  label='正確率'
+                  val={
+                    key_cnt.current + miss_cnt.current !== 0
+                      ? `${((key_cnt.current / (key_cnt.current + miss_cnt.current)) * 100).toFixed(1)}%`
+                      : '-'
+                  }
+                ></Value>
+              </div>
             </div>
             {cancel.current && (
               <div className='flex flex-col items-center justify-center w-full'>
