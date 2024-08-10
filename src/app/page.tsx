@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -13,8 +14,9 @@ import {
   Switch,
 } from '@nextui-org/react';
 import { useTheme } from 'next-themes';
+import { useRouter } from 'next/navigation';
+
 import { themes } from '@/utils/theme';
-import { useEffect, useState } from 'react';
 import { default_storage, reset_storage } from '@/utils/localstorage';
 import {
   datas,
@@ -23,17 +25,10 @@ import {
   subjects,
   subjects_select,
   subjects_to_str,
-} from '@/utils/data';
-import {
-  filter_keys,
-  only_enable,
-  set_to_str,
-  str_to_set,
-  to_bool,
-  btos,
   inf_timer,
-} from '@/utils/util';
-import { useRouter } from 'next/navigation';
+} from '@/utils/data';
+import { filter_keys, only_enable } from '@/utils/util';
+import { str_to_set, set_to_str, to_bool, btos } from '@/utils/type';
 
 export default function Home() {
   // 初期設定類
