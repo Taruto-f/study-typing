@@ -1,11 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { NextUIProvider } from '@nextui-org/react';
 import { ThemeProvider } from 'next-themes';
 import { useRouter } from 'next/navigation';
+
 import { TopTab } from './tabs';
 import { reset_storage } from '@/utils/localstorage';
-import { useEffect, useState } from 'react';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter();

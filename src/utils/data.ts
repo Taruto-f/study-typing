@@ -381,3 +381,5 @@ export function get_words(
 
   return ans;
 }
+
+export const inf_timer = '999999999';

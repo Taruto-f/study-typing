@@ -1,4 +1,4 @@
-import { btos } from './util';
+import { btos } from './type';
 
 export function gen_url(
   season: string,
