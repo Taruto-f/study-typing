@@ -10,4 +10,5 @@ test('タブチェック', () => {
 
   expect(screen.getByText('Home')).toBeDefined();
   expect(screen.getByText('Data')).toBeDefined();
+  expect(screen.getByText('About')).toBeDefined();
 });

@@ -10,7 +10,7 @@ export function TopTab({
   force?: boolean;
 }) {
   const path = usePathname();
-  const taburl = new Set(['/', '/data']);
+  const taburl = new Set(['/', '/data', '/about']);
 
   return (
     <>
@@ -27,6 +27,7 @@ export function TopTab({
             <Tabs aria-label='Options' selectedKey={path}>
               <Tab key='/' title='Home' href='/'></Tab>
               <Tab key='/data' title='Data' href='/data'></Tab>
+              <Tab key='/about' title='About' href='/about'></Tab>
             </Tabs>
           </div>
         )}
