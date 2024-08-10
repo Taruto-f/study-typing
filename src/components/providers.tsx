@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import { TopTab } from './tabs';
 import { reset_storage } from '@/utils/localstorage';
+import Welcome from './welcome';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -19,7 +20,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <NextUIProvider locale='ja-JP' navigate={router.push}>
       <ThemeProvider attribute='class' defaultTheme={theme}>
-        <TopTab>{children}</TopTab>
+        <TopTab>
+          <Welcome></Welcome>
+          {children}
+        </TopTab>
       </ThemeProvider>
     </NextUIProvider>
   );
