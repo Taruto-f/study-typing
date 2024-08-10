@@ -12,7 +12,9 @@
     "test": "vitest --run"
   },
   "dependencies": {
+    "@hcaptcha/react-hcaptcha": "^1.10.3",
     "@nextui-org/react": "^2.4.6",
+    "@supabase/supabase-js": "^2.45.1",
     "fast-shuffle": "^6.1.0",
     "framer-motion": "^11.3.24",
     "higgsino": "^1.0.31",
