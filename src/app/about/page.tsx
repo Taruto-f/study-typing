@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardBody } from '@nextui-org/react';
+import { Card, CardBody, Link } from '@nextui-org/react';
 
 export default function About() {
   return (
@@ -16,6 +16,9 @@ export default function About() {
               </p>
               <p>料金はかからず、全て無料で利用できます。</p>
             </div>
+            <Link href='/CREDITS.txt' isExternal showAnchorIcon>
+              著作権の表記
+            </Link>
           </div>
         </CardBody>
       </Card>
