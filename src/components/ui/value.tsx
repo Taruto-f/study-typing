@@ -11,12 +11,12 @@ export default function Value({
   val,
 }: {
   label: string;
-  val: number | string;
+  val: number | string | undefined;
 }) {
   return (
     <div className='flex flex-col items-center w-full'>
       <p>{label}</p>
-      <p className={`${SourceCodePro.className} text-3xl`}>{val}</p>
+      <p className={`${SourceCodePro.className} text-3xl`}>{val ?? '-'}</p>
     </div>
   );
 }

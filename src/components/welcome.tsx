@@ -11,6 +11,7 @@ import {
 import { supabase } from '@/utils/supabase/client';
 import { useEffect, useRef } from 'react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { is_session } from '@/utils/supabase/auth';
 
 export default function Welcome() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -21,9 +22,7 @@ export default function Welcome() {
 
   useEffect(() => {
     (async () => {
-      const session = await supabase.auth.getSession();
-      console.log(session);
-      if (session.data.session === null) {
+      if (!(await is_session())) {
         onOpen();
       }
     })();
@@ -64,6 +63,7 @@ export default function Welcome() {
                       },
                     });
                     onClose();
+                    window.location.reload();
                   }}
                 ></HCaptcha>
               </div>
