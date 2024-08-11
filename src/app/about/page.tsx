@@ -1,5 +1,6 @@
 'use client';
 
+import Title from '@/components/ui/title';
 import { Card, CardBody, Link } from '@nextui-org/react';
 
 export default function About() {
@@ -8,7 +9,7 @@ export default function About() {
       <Card>
         <CardBody>
           <div className='my-8 flex flex-col items-center py-2 gap-12'>
-            <h1 className='text-4xl font-bold'>About</h1>
+            <Title>About</Title>
             <div className='flex flex-col items-center justify-center w-full'>
               <p>
                 Study

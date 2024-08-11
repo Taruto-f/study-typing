@@ -35,10 +35,14 @@ import key3_mp3 from '#/key3.mp3';
 import miss_mp3 from '#/miss.mp3';
 
 import { get_words, Words } from '@/utils/data';
-import Value from '@/components/value';
+import Value from '@/components/ui/value';
 import { gen_url, share_text, x, line } from '@/utils/share';
 import { inf_timer } from '@/utils/data';
 import { str_to_set, to_bool, btos } from '@/utils/type';
+import { Data } from '@/types/supabase/data';
+import { get_data } from '@/utils/supabase/database';
+import { supabase } from '@/utils/supabase/client';
+import { get_id } from '@/utils/supabase/auth';
 
 const SourceCodePro = Source_Code_Pro({
   subsets: ['latin'],
@@ -89,6 +93,7 @@ export default function Play() {
 
   const [inited, setInited] = useState(false);
   const [started, setStarted] = useState(false);
+  const [new_record, setNewRecord] = useState(false);
 
   // results
   const key_cnt = useRef(0);
@@ -98,6 +103,14 @@ export default function Play() {
 
   const cancel = useRef(false);
   const share_url = useRef('https://example.com');
+  const new_data = useRef<Data>({
+    id: '',
+    answer_sum: 0,
+    max_point: 0,
+    name: '',
+    point_sum: 0,
+    type_sum: 0,
+  });
 
   // sounds
   const [key1] = useSound(key1_mp3, { interrupt: false });
@@ -105,10 +118,28 @@ export default function Play() {
   const [key3] = useSound(key3_mp3, { interrupt: false });
   const [miss] = useSound(miss_mp3, { interrupt: false });
 
+  async function update_data() {
+    if (!cancel.current) {
+      new_data.current.answer_sum += answer;
+      new_data.current.point_sum += point;
+      new_data.current.type_sum += key_cnt.current;
+
+      if (new_data.current.max_point < point) {
+        new_data.current.max_point = point;
+        setNewRecord(true);
+      }
+      const id = await get_id();
+      await supabase.from('users').update(new_data.current).eq('id', id);
+    }
+  }
+
   const { totalSeconds, isRunning, restart, pause } = useTimer({
     expiryTimestamp: set_sec(60),
     autoStart: false,
-    onExpire: onResultOpen,
+    onExpire: () => {
+      onResultOpen();
+      update_data();
+    },
   });
 
   const init = useCallback(() => {
@@ -244,7 +275,10 @@ export default function Play() {
         time.current
       );
 
-      setInited(true);
+      (async () => {
+        new_data.current = await get_data();
+        setInited(true);
+      })();
     }
 
     document.addEventListener('keydown', keyHandler, false);
@@ -384,6 +418,13 @@ export default function Play() {
           <ModalHeader>結果</ModalHeader>
           <ModalBody>
             <div className='flex flex-col items-center justify-center w-full gap-y-4'>
+              {new_record && (
+                <div className='flex flex-col items-center justify-center w-full'>
+                  <Chip variant='flat' color='warning'>
+                    NEW RECORD!
+                  </Chip>
+                </div>
+              )}
               <Value label='得点' val={point}></Value>
               <div className='grid grid-cols-2 gap-y-4'>
                 <Value label='回答数' val={answer}></Value>
