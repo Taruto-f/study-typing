@@ -23,7 +23,7 @@ export default function DataPage() {
 
   return (
     <>
-      <div className='py-5'>
+      <div className='py-4'>
         <Card>
           <CardBody>
             <div className='flex flex-col my-12 py-2 gap-20 items-center justify-center'>
