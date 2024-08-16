@@ -148,14 +148,18 @@ export default function Home() {
                 >
                   {(data) => {
                     return (
-                      <SelectSection showDivider title={data.year}>
-                        {data.seasons.map((season) => (
+                      <SelectSection
+                        showDivider
+                        title={data.year}
+                        items={data.seasons}
+                      >
+                        {(season) => (
                           <SelectItem
                             key={data.key + '_' + String(season.season)}
                           >
                             {`${data.year} ${season.season}学期`}
                           </SelectItem>
-                        ))}
+                        )}
                       </SelectSection>
                     );
                   }}

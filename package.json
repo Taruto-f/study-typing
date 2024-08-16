@@ -12,11 +12,11 @@
     "test": "vitest --run"
   },
   "dependencies": {
-    "@hcaptcha/react-hcaptcha": "^1.10.3",
+    "@hcaptcha/react-hcaptcha": "^1.11.0",
     "@nextui-org/react": "^2.4.6",
     "@supabase/supabase-js": "^2.45.1",
     "fast-shuffle": "^6.1.0",
-    "framer-motion": "^11.3.24",
+    "framer-motion": "^11.3.28",
     "higgsino": "^1.0.31",
     "next": "^14.2.5",
     "next-themes": "^0.3.0",
@@ -43,8 +43,8 @@
     "jsdom": "^24.1.1",
     "postcss": "^8.4.41",
     "prettier": "^3.3.3",
-    "supabase": "^1.187.10",
-    "tailwindcss": "^3.4.9",
+    "supabase": "^1.190.0",
+    "tailwindcss": "^3.4.10",
     "typescript": "^5.5.4",
     "vitest": "^2.0.5"
   }
