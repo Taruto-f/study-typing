@@ -16,6 +16,7 @@ import {
   TableHeader,
   TableRow,
   Pagination,
+  Tooltip,
 } from '@nextui-org/react';
 import { useEffect, useState, useMemo } from 'react';
 import { Source_Code_Pro } from 'next/font/google';
@@ -102,7 +103,7 @@ function ShowTable({
         selectedKeys={[id]}
         selectionMode='single'
         color='primary'
-        aria-label='a'
+        aria-label='Ranking'
         bottomContent={
           <div className='flex w-full justify-center'>
             <Pagination
@@ -125,14 +126,23 @@ function ShowTable({
         <TableBody items={items} emptyContent='データなし'>
           {(item) => {
             return (
-              <TableRow key={item.id} aria-label='aaq'>
-                {(colkey) => (
-                  <TableCell>
-                    <div className={`text-medium ${SourceCodePro.className}`}>
-                      {getKeyValue(item, colkey)}
-                    </div>
-                  </TableCell>
-                )}
+              <TableRow key={item.id} aria-label='Table Row'>
+                {(colkey) => {
+                  return (
+                    <TableCell>
+                      <div className={`text-medium ${SourceCodePro.className}`}>
+                        <Tooltip
+                          content={'ID: ' + item.id}
+                          isDisabled={colkey !== 'name'}
+                          placement='top-start'
+                          closeDelay={100}
+                        >
+                          {getKeyValue(item, colkey)}
+                        </Tooltip>
+                      </div>
+                    </TableCell>
+                  );
+                }}
               </TableRow>
             );
           }}
@@ -199,9 +209,11 @@ export default function Ranking() {
 
   return (
     <>
-      <div className={`py-4 grid grid-cols-2 gap-x-4`}>
+      <div className={`py-4 grid grid-cols-2 gap-4`}>
         <ShowCard title='最高得点' keys='max_point' id={my_id}></ShowCard>
         <ShowCard title='累計得点' keys='point_sum' id={my_id}></ShowCard>
+        <ShowCard title='累計タイプ数' keys='type_sum' id={my_id}></ShowCard>
+        <ShowCard title='累計回答数' keys='answer_sum' id={my_id}></ShowCard>
       </div>
     </>
   );
