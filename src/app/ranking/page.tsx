@@ -172,6 +172,7 @@ function ShowCard({
             .select('*')
             .order(keys, { ascending: false })
             .order('name', { ascending: true })
+            .order('id', { ascending: true })
         ).data!
       );
     })();
