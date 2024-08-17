@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { Noto_Sans_JP } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import './globals.css';
 import { Providers } from '@/components/providers';
-import { Analytics } from '@vercel/analytics/next';
 
 const NotoSansJP = Noto_Sans_JP({
   subsets: ['latin'],
@@ -27,6 +28,7 @@ export default function RootLayout({
           <Providers>
             {children}
             <Analytics></Analytics>
+            <SpeedInsights></SpeedInsights>
           </Providers>
         </div>
       </body>
