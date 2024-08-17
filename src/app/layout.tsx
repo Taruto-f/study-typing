@@ -3,6 +3,7 @@ import { Noto_Sans_JP } from 'next/font/google';
 
 import './globals.css';
 import { Providers } from '@/components/providers';
+import { Analytics } from '@vercel/analytics/next';
 
 const NotoSansJP = Noto_Sans_JP({
   subsets: ['latin'],
@@ -23,7 +24,10 @@ export default function RootLayout({
     <html lang='ja' suppressHydrationWarning={true}>
       <body className={NotoSansJP.className}>
         <div className='w-screen h-screen py-4 flex items-start justify-center'>
-          <Providers>{children}</Providers>
+          <Providers>
+            {children}
+            <Analytics></Analytics>
+          </Providers>
         </div>
       </body>
     </html>
