@@ -130,9 +130,19 @@ function ShowTable({
                 {(colkey) => {
                   return (
                     <TableCell>
-                      <div className={`text-medium ${SourceCodePro.className}`}>
+                      <div
+                        className={
+                          colkey !== 'name'
+                            ? `text-medium ${SourceCodePro.className}`
+                            : ''
+                        }
+                      >
                         <Tooltip
-                          content={'ID: ' + item.id}
+                          content={
+                            <div className={SourceCodePro.className}>
+                              ID: {item.id}
+                            </div>
+                          }
                           isDisabled={colkey !== 'name'}
                           placement='top-start'
                           closeDelay={100}
