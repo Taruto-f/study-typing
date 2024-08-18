@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import './globals.css';
+import 'katex/dist/katex.min.css';
 import { Providers } from '@/components/providers';
 
 const NotoSansJP = Noto_Sans_JP({

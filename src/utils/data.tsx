@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+import { InlineMath as Math } from 'react-katex';
 import { z } from 'zod';
 
 const year_regex = /^(小学|中学|高校)[一二三四五六七八九]年$/;
@@ -5,7 +7,7 @@ const year_regex = /^(小学|中学|高校)[一二三四五六七八九]年$/;
 export const TypeData = z.object({
   moji: z.string(),
   yomi: z.string().regex(/^[ぁ-んー]+$/),
-  mean: z.string(),
+  mean: z.string().or(z.custom<ReactElement>()),
 });
 
 const DataArray = z.array(TypeData).optional();
@@ -90,14 +92,79 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
         ],
         math: [
           {
+            moji: '正の符号',
+            yomi: 'せいのふごう',
+            mean: (
+              <>
+                「<Math math='+'></Math>」の符号のこと
+              </>
+            ),
+          },
+          {
+            moji: '負の符号',
+            yomi: 'ふのふごう',
+            mean: (
+              <>
+                「<Math math='-'></Math>」の符号のこと
+              </>
+            ),
+          },
+          {
+            moji: '正の数',
+            yomi: 'せいのすう',
+            mean: (
+              <>
+                <Math math='0'></Math>より大きい数
+              </>
+            ),
+          },
+          {
+            moji: '負の数',
+            yomi: 'ふのすう',
+            mean: (
+              <>
+                <Math math='0'></Math>より小さい数
+              </>
+            ),
+          },
+          {
             moji: '自然数',
             yomi: 'しぜんすう',
-            mean: '1以上の整数',
+            mean: '正の整数',
+          },
+          {
+            moji: '原点',
+            yomi: 'げんてん',
+            mean: '数直線上の基準となる点',
+          },
+          {
+            moji: '絶対値',
+            yomi: 'ぜったいち',
+            mean: '数直線上のある数と原点の距離',
+          },
+          {
+            moji: '加法',
+            yomi: 'かほう',
+            mean: '足し算のこと',
+          },
+          {
+            moji: '加法の交換法則',
+            yomi: 'かほうのこうかんほうそく',
+            mean: (
+              <>
+                加法の順番を変えても、その和が変わらない法則
+                <Math math='(a+b=b+a)'></Math>
+              </>
+            ),
           },
           {
             moji: '素数',
             yomi: 'そすう',
-            mean: '1とその数自身でしか割り切れない数',
+            mean: (
+              <>
+                <Math math='1'></Math>とその数自身でしか割り切れない数
+              </>
+            ),
           },
         ],
         geography: [
