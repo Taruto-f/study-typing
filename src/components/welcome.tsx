@@ -45,7 +45,8 @@ export default function Welcome() {
               </div>
             </ModalHeader>
             <ModalBody>
-              <div className='flex items-center justify-center w-full'>
+              <div className='flex flex-col gap-y-2 items-center justify-center w-full'>
+                <p>Study Typingへようこそ!</p>
                 <p>不正防止のため確認にご協力ください。</p>
               </div>
             </ModalBody>

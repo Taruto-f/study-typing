@@ -2,6 +2,7 @@
 
 import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { is_session } from '@/utils/supabase/auth';
 
 function Param() {
   const params = useSearchParams();
@@ -30,8 +31,12 @@ function Param() {
       }
     }
 
-    if (ok) router.replace('/play');
-    else router.replace('/');
+    (async () => {
+      if (await is_session()) {
+        if (ok) router.replace('/play');
+        else router.replace('/');
+      }
+    })();
   });
 
   return (
