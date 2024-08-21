@@ -335,11 +335,11 @@ export default function Play() {
               </div>
 
               <Skeleton className='rounded-lg' isLoaded={inited}>
-                <p className='text-2xl'>
+                <div className='text-2xl'>
                   {pos == -1
                     ? 'ゲーム開始のための処理をしています'
                     : words.current[pos].mean}
-                </p>
+                </div>
               </Skeleton>
 
               <p className={`${SourceCodePro.className} text-3xl`}>

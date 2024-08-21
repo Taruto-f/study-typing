@@ -151,10 +151,11 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             moji: '加法の交換法則',
             yomi: 'かほうのこうかんほうそく',
             mean: (
-              <>
+              <div className='flex flex-col justify-center items-center'>
                 加法の順番を変えても、その和が変わらない法則
-                <Math math='(a+b=b+a)'></Math>
-              </>
+                <br />
+                <Math math='a+b=b+a'></Math>
+              </div>
             ),
           },
           {
