@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { InlineMath as Math } from 'react-katex';
+import { InlineMath as Math, BlockMath } from 'react-katex';
 import { z } from 'zod';
 
 const year_regex = /^(小学|中学|高校)[一二三四五六七八九]年$/;
@@ -36,6 +36,7 @@ export const SeasonData = z.object({
   seasons: Subjects.array(),
 });
 
+const center = 'flex flex-col justify-center items-center';
 const data_raw: Array<z.infer<typeof SeasonData>> = [
   {
     year: '中学一年',
@@ -151,10 +152,107 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             moji: '加法の交換法則',
             yomi: 'かほうのこうかんほうそく',
             mean: (
-              <div className='flex flex-col justify-center items-center'>
+              <div className={center}>
                 加法の順番を変えても、その和が変わらない法則
-                <br />
-                <Math math='a+b=b+a'></Math>
+                <BlockMath math='a+b=b+a'></BlockMath>
+              </div>
+            ),
+          },
+          {
+            moji: '加法の結合法則',
+            yomi: 'かほうのけつごうほうそく',
+            mean: (
+              <div className={center}>
+                加法の括弧の位置を変えても、その和が変わらない法則
+                <BlockMath math='(a+b)+c=a+(b+c)'></BlockMath>
+              </div>
+            ),
+          },
+          {
+            moji: '減法',
+            yomi: 'げんぽう',
+            mean: '引き算のこと',
+          },
+          {
+            moji: '項',
+            yomi: 'こう',
+            mean: (
+              <>
+                式を<Math math='+'></Math>等の記号で区切った時の値
+              </>
+            ),
+          },
+          {
+            moji: '正の項',
+            yomi: 'せいのこう',
+            mean: '正の数の項',
+          },
+          {
+            moji: '負の項',
+            yomi: 'ふのこう',
+            mean: '負の数の項',
+          },
+          {
+            moji: '乗法',
+            yomi: 'じょうほう',
+            mean: '掛け算のこと',
+          },
+          {
+            moji: '乗法の交換法則',
+            yomi: 'じょうほうのこうかんほうそく',
+            mean: (
+              <div className={center}>
+                乗法の順番を変えても、その和が変わらない法則
+                <BlockMath math='a \times b=b \times a'></BlockMath>
+              </div>
+            ),
+          },
+          {
+            moji: '乗法の結合法則',
+            yomi: 'じょうほうのけつごうほうそく',
+            mean: (
+              <div className={center}>
+                乗法の括弧の位置を変えても、その和が変わらない法則
+                <BlockMath math='(a \times b) \times c=a \times (b \times c)'></BlockMath>
+              </div>
+            ),
+          },
+          {
+            moji: '累乗',
+            yomi: 'るいじょう',
+            mean: (
+              <div className={center}>
+                ある数を何回もかける計算
+                <BlockMath math='x^y'></BlockMath>
+              </div>
+            ),
+          },
+          {
+            moji: '指数',
+            yomi: 'しすう',
+            mean: (
+              <>
+                <Math math='x^y'></Math>の式の<Math math='y'></Math>
+              </>
+            ),
+          },
+          {
+            moji: '除法',
+            yomi: 'じょほう',
+            mean: '割り算のこと',
+          },
+          {
+            moji: '四則',
+            yomi: 'しそく',
+            mean: '加法、減法、乗法、除法の総称',
+          },
+          {
+            moji: '分配法則',
+            yomi: 'ぶんぱいほうそく',
+            mean: (
+              <div className={center}>
+                乗法と加法に関する以下の法則
+                <BlockMath math='(a+b) \times c=a \times c + b \times c'></BlockMath>
               </div>
             ),
           },
@@ -228,6 +326,26 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             moji: '経線',
             yomi: 'けいせん',
             mean: '北極点と南極点を結んだ、赤道と垂直の線',
+          },
+          {
+            moji: '本初子午線',
+            yomi: 'ほんしょしごせん',
+            mean: '経度0度の経線',
+          },
+          {
+            moji: '白夜',
+            yomi: 'びゃくや',
+            mean: '高緯度の場所で見られる、夏に一日中太陽が沈まない現象',
+          },
+          {
+            moji: '地球儀',
+            yomi: 'ちきゅうぎ',
+            mean: '地球を小さく縮めた模型',
+          },
+          {
+            moji: '世界地図',
+            yomi: 'せかいちず',
+            mean: '地球全体を写した図',
           },
         ],
         science: [
@@ -320,6 +438,46 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             moji: 'ひげ根',
             yomi: 'ひげね',
             mean: '複数の小さい根からなる根の種類',
+          },
+          {
+            moji: '根毛',
+            yomi: 'こんもう',
+            mean: '根の先端に生える小さく細い毛',
+          },
+          {
+            moji: '単子葉類',
+            yomi: 'たんしようるい',
+            mean: '子葉が一枚の植物',
+          },
+          {
+            moji: '双子葉類',
+            yomi: 'そうしようるい',
+            mean: '子葉が二枚の植物',
+          },
+          {
+            moji: '花粉嚢',
+            yomi: 'かふんのう',
+            mean: '花粉が入っている袋',
+          },
+          {
+            moji: '裸子植物',
+            yomi: 'らししょくぶつ',
+            mean: '胚珠がむき出しになっている植物',
+          },
+          {
+            moji: '被子植物',
+            yomi: 'ひししょくぶつ',
+            mean: '胚珠が子房の中にある植物',
+          },
+          {
+            moji: '胞子',
+            yomi: 'ほうし',
+            mean: 'シダ植物やコケ植物が作る小さな繁殖体',
+          },
+          {
+            moji: '胞子嚢',
+            yomi: 'ほうしのう',
+            mean: '胞子が入った袋',
           },
         ],
       },

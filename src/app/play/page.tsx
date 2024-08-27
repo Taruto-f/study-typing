@@ -305,14 +305,14 @@ export default function Play() {
           </CardHeader>
           <Divider></Divider>
           <CardBody>
-            <div className='flex flex-col justify-center items-center h-96 gap-5 m-5'>
+            <div className='flex flex-col justify-center items-center h-[430px] gap-5 m-5'>
               <Skeleton className='rounded-lg' isLoaded={inited}>
                 <p className='text-2xl'>
                   {pos == -1 ? '総合' : words.current[pos].subject}
                 </p>
               </Skeleton>
 
-              <div className='flex flex-col justify-center items-center m-8 gap-2'>
+              <div className='flex flex-col justify-center items-center m-12 gap-2'>
                 <Skeleton className='rounded-lg' isLoaded={inited}>
                   <h1 className='text-7xl font-bold'>
                     {pos == -1
