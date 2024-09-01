@@ -79,6 +79,7 @@ export default function Play() {
 
   const show_roman = useRef(true);
   const show_word = useRef(true);
+  const [show, setShow] = useState(false);
   const enable_keysound = useRef(true);
   const enbale_misssound = useRef(true);
   const time_infinity = useRef(false);
@@ -159,6 +160,7 @@ export default function Play() {
     (event: KeyboardEvent) => {
       const next = () => {
         const new_pos = pos + 1;
+        setShow(false);
         if (new_pos < words.current.length) {
           setPos(new_pos);
           word.current = new Word(
@@ -208,7 +210,7 @@ export default function Play() {
             setAnswer(answer + 1);
             next();
           }
-        } else if (event.code === 'Space') {
+        } else if (event.code === 'Space' && !show && !show_word.current) {
           setPoint(Math.round(point / 2));
           setStreak(0);
           skip_cnt.current++;
@@ -222,7 +224,8 @@ export default function Play() {
             miss();
           }
 
-          next();
+          // next();
+          setShow(true);
         } else if (event.code === 'Escape') {
           pause();
           cancel.current = true;
@@ -247,6 +250,7 @@ export default function Play() {
       restart,
       pause,
       onResultOpen,
+      show,
     ]
   );
 
@@ -317,7 +321,7 @@ export default function Play() {
                   <h1 className='text-7xl font-bold'>
                     {pos == -1
                       ? '読み込み中'
-                      : show_word.current
+                      : show_word.current || show
                         ? words.current[pos].moji
                         : '???'}
                   </h1>
@@ -327,7 +331,7 @@ export default function Play() {
                   <p className='text-xl'>
                     {pos == -1
                       ? 'よみこみちゅう'
-                      : show_word.current
+                      : show_word.current || show
                         ? words.current[pos].yomi
                         : '???'}
                   </p>
@@ -342,12 +346,14 @@ export default function Play() {
                 </div>
               </Skeleton>
 
-              <p className={`${SourceCodePro.className} text-3xl`}>
-                <span>{typed}</span>
-                {show_roman.current && (
-                  <span className='text-default-400'>{untyped}</span>
-                )}
-              </p>
+              <Skeleton className='rounded-lg' isLoaded={inited}>
+                <p className={`${SourceCodePro.className} text-3xl`}>
+                  <span>{typed}</span>
+                  {show_roman.current && (
+                    <span className='text-default-400'>{untyped}</span>
+                  )}
+                </p>
+              </Skeleton>
             </div>
           </CardBody>
           <Divider></Divider>
@@ -381,7 +387,7 @@ export default function Play() {
                       ・連続して正しくタイピングすることでストリークが増え、得点をより多く得ることができます。
                     </li>
                     <li>
-                      ・スペースキーを押すことで、得点を消費して問題をスキップすることが出来ます。
+                      ・スペースキーを押すことで、得点を消費して単語を表示することができます(単語非表示モードのみ)
                     </li>
                     <li>・Escキーを押すことで、中断することが出来ます。</li>
                     <li>・キーを打ち始めてから開始です。</li>
@@ -428,7 +434,7 @@ export default function Play() {
               <Value label='得点' val={point}></Value>
               <div className='grid grid-cols-2 gap-y-4'>
                 <Value label='回答数' val={answer}></Value>
-                <Value label='スキップ回数' val={skip_cnt.current}></Value>
+                <Value label='オープン回数' val={skip_cnt.current}></Value>
                 <Value label='正しく打った回数' val={key_cnt.current}></Value>
                 <Value label='ミス回数' val={miss_cnt.current}></Value>
                 <Value
