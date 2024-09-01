@@ -349,7 +349,7 @@ export default function Play() {
               <Skeleton className='rounded-lg' isLoaded={inited}>
                 <p className={`${SourceCodePro.className} text-3xl`}>
                   <span>{typed}</span>
-                  {show_roman.current && (
+                  {(show_roman.current || show) && (
                     <span className='text-default-400'>{untyped}</span>
                   )}
                 </p>
