@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { NextUIProvider } from '@nextui-org/react';
 import { ThemeProvider } from 'next-themes';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import { TopTab } from './tabs';
 import { reset_storage } from '@/utils/localstorage';
+import { TopTab } from './tabs';
 import Welcome from './welcome';
 
 export function Providers({ children }: { children: React.ReactNode }) {

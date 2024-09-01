@@ -1,5 +1,5 @@
 'use client';
-import { Tabs, Tab, Link } from '@nextui-org/react';
+import { Link, Tab, Tabs } from '@nextui-org/react';
 import { usePathname } from 'next/navigation';
 
 export function TopTab({

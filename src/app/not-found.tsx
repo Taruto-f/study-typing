@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardBody, CardFooter, Button } from '@nextui-org/react';
+import { Button, Card, CardBody, CardFooter } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 
 export default function NotFound() {

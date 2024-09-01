@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { InlineMath as Math, BlockMath } from 'react-katex';
+import { BlockMath, InlineMath as Maths } from 'react-katex';
 import { z } from 'zod';
 
 const year_regex = /^(小学|中学|高校)[一二三四五六七八九]年$/;
@@ -97,7 +97,7 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             yomi: 'せいのふごう',
             mean: (
               <>
-                「<Math math='+'></Math>」の符号のこと
+                「<Maths math='+'></Maths>」の符号のこと
               </>
             ),
           },
@@ -106,7 +106,7 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             yomi: 'ふのふごう',
             mean: (
               <>
-                「<Math math='-'></Math>」の符号のこと
+                「<Maths math='-'></Maths>」の符号のこと
               </>
             ),
           },
@@ -115,7 +115,7 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             yomi: 'せいのすう',
             mean: (
               <>
-                <Math math='0'></Math>より大きい数
+                <Maths math='0'></Maths>より大きい数
               </>
             ),
           },
@@ -124,7 +124,7 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             yomi: 'ふのすう',
             mean: (
               <>
-                <Math math='0'></Math>より小さい数
+                <Maths math='0'></Maths>より小さい数
               </>
             ),
           },
@@ -178,7 +178,7 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             yomi: 'こう',
             mean: (
               <>
-                式を<Math math='+'></Math>等の記号で区切った時の値
+                式を<Maths math='+'></Maths>等の記号で区切った時の値
               </>
             ),
           },
@@ -232,7 +232,7 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             yomi: 'しすう',
             mean: (
               <>
-                <Math math='x^y'></Math>の式の<Math math='y'></Math>
+                <Maths math='x^y'></Maths>の式の<Maths math='y'></Maths>
               </>
             ),
           },
@@ -261,7 +261,7 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             yomi: 'そすう',
             mean: (
               <>
-                <Math math='1'></Math>とその数自身でしか割り切れない数
+                <Maths math='1'></Maths>とその数自身でしか割り切れない数
               </>
             ),
           },

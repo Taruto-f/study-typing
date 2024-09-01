@@ -1,11 +1,11 @@
 'use client';
-import { Card, CardBody } from '@nextui-org/react';
-import { useEffect, useState } from 'react';
-import { Data } from '@/types/supabase/data';
-import { is_session } from '@/utils/supabase/auth';
 import Title from '@/components/ui/title';
 import Value from '@/components/ui/value';
+import { Data } from '@/types/supabase/data';
+import { is_session } from '@/utils/supabase/auth';
 import { get_data } from '@/utils/supabase/database';
+import { Card, CardBody } from '@nextui-org/react';
+import { useEffect, useState } from 'react';
 
 export default function DataPage() {
   const [data, setData] = useState<Partial<Data>>({});

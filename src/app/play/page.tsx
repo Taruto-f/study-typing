@@ -1,6 +1,5 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Button,
   Card,
@@ -24,25 +23,26 @@ import {
 } from '@nextui-org/react';
 import { shuffle } from 'fast-shuffle';
 import { Word } from 'higgsino';
+import { Source_Code_Pro } from 'next/font/google';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTimer } from 'react-timer-hook';
 import useSound from 'use-sound';
-import { useRouter } from 'next/navigation';
-import { Source_Code_Pro } from 'next/font/google';
 
 import key1_mp3 from '#/key1.mp3';
 import key2_mp3 from '#/key2.mp3';
 import key3_mp3 from '#/key3.mp3';
 import miss_mp3 from '#/miss.mp3';
 
-import { get_words, Words } from '@/utils/data';
 import Value from '@/components/ui/value';
-import { gen_url, share_text, x, line } from '@/utils/share';
-import { inf_timer } from '@/utils/data';
-import { str_to_set, to_bool, btos } from '@/utils/type';
 import { Data } from '@/types/supabase/data';
-import { get_data } from '@/utils/supabase/database';
-import { supabase } from '@/utils/supabase/client';
+import { Words, get_words } from '@/utils/data';
+import { inf_timer } from '@/utils/data';
+import { gen_url, line, share_text, x } from '@/utils/share';
 import { get_id } from '@/utils/supabase/auth';
+import { supabase } from '@/utils/supabase/client';
+import { get_data } from '@/utils/supabase/database';
+import { btos, str_to_set, to_bool } from '@/utils/type';
 
 const SourceCodePro = Source_Code_Pro({
   subsets: ['latin'],

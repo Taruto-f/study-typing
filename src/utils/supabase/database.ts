@@ -1,6 +1,6 @@
+import type { Data } from '@/types/supabase/data';
 import { get_id, is_session } from './auth';
 import { supabase } from './client';
-import type { Data } from '@/types/supabase/data';
 
 export async function get_data(): Promise<Data> {
   if (!(await is_session())) {

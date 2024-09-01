@@ -1,5 +1,8 @@
 'use client';
 
+import { is_session } from '@/utils/supabase/auth';
+import { supabase } from '@/utils/supabase/client';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import {
   Modal,
   ModalBody,
@@ -8,16 +11,12 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@nextui-org/react';
-import { supabase } from '@/utils/supabase/client';
 import { useEffect, useRef } from 'react';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
-import { is_session } from '@/utils/supabase/auth';
 
 export default function Welcome() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const captcha = useRef<any>();
+  const captcha = useRef<HCaptcha>(null);
   // const [captchaToken, setCaptchaToken] = useState<string>('');
 
   useEffect(() => {
@@ -57,7 +56,7 @@ export default function Welcome() {
                   sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITEKEY!}
                   onVerify={async (token) => {
                     // setCaptchaToken(token);
-                    captcha.current.resetCaptcha();
+                    captcha.current!.resetCaptcha();
                     await supabase.auth.signInAnonymously({
                       options: {
                         captchaToken: token,
