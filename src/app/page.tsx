@@ -220,8 +220,6 @@ export default function Home() {
                     }
                   }}
                 >
-                  <SelectItem key='1'>Drop IT!</SelectItem>
-                  <SelectItem key='2'>test</SelectItem>
                   <SelectItem key='60'>60秒</SelectItem>
                   <SelectItem key={inf_timer}>無制限</SelectItem>
                 </Select>

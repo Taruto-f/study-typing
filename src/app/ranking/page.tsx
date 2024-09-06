@@ -5,9 +5,16 @@ import { Data } from '@/types/supabase/data';
 import { get_id } from '@/utils/supabase/auth';
 import { supabase } from '@/utils/supabase/client';
 import {
+  Button,
   Card,
   CardBody,
   CardHeader,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Pagination,
   Table,
   TableBody,
@@ -17,6 +24,7 @@ import {
   TableRow,
   Tooltip,
   getKeyValue,
+  useDisclosure,
 } from '@nextui-org/react';
 import { Source_Code_Pro } from 'next/font/google';
 import { useEffect, useMemo, useState } from 'react';
@@ -211,21 +219,80 @@ function ShowCard({
 
 export default function Ranking() {
   const [my_id, setId] = useState('');
+  const [new_name, setNewName] = useState('');
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
     (async () => {
-      setId(await get_id());
+      const id = await get_id();
+      setId(id);
+      setNewName(
+        (await supabase.from('users').select('name').eq('id', id).single())
+          .data!.name
+      );
     })();
   }, []);
 
+  const enable_name = useMemo(() => {
+    return (
+      /^(?!.*(\*|﷽)).*$/.test(new_name) &&
+      new_name.length > 0 &&
+      new_name.length <= 10
+    );
+  }, [new_name]);
+
   return (
     <>
+      <div className='py-4 flex flex-col justify-center items-center my-8 gap-4'>
+        <Title>Ranking</Title>
+        <Button variant='ghost' size='lg' onPress={onOpen}>
+          名前を変更
+        </Button>
+      </div>
       <div className={`py-4 grid grid-cols-2 gap-4`}>
         <ShowCard title='最高得点' keys='max_point' id={my_id}></ShowCard>
         <ShowCard title='累計得点' keys='point_sum' id={my_id}></ShowCard>
         <ShowCard title='累計タイプ数' keys='type_sum' id={my_id}></ShowCard>
         <ShowCard title='累計回答数' keys='answer_sum' id={my_id}></ShowCard>
       </div>
+
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          <ModalHeader>
+            <div className='flex items-center justify-center w-full my-8'>
+              <p className='font-bold text-4xl'>名前変更</p>
+            </div>
+          </ModalHeader>
+          <ModalBody>
+            <Input
+              label='ユーザー名'
+              placeholder='新しいユーザー名を入力してください'
+              isClearable
+              isInvalid={!enable_name}
+              color={!enable_name ? 'danger' : 'success'}
+              errorMessage='名前が無効です'
+              value={new_name}
+              onValueChange={setNewName}
+              variant='underlined'
+            ></Input>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              color='primary'
+              isDisabled={!enable_name}
+              onPress={async () => {
+                await supabase
+                  .from('users')
+                  .update({ name: new_name })
+                  .eq('id', my_id);
+                location.reload();
+              }}
+            >
+              更新
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

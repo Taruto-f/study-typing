@@ -12,7 +12,7 @@ export default function NotFound() {
         <Card>
           <CardBody>
             <div className='flex flex-col justify-center items-center h-96 gap-5 m-5'>
-              <p className='text-2xl'>技術</p>
+              <p className='text-2xl'>HTTP</p>
 
               <div className='flex flex-col justify-center items-center m-8 gap-2'>
                 <h1 className='text-7xl font-bold'>404</h1>
