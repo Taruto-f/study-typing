@@ -143,6 +143,10 @@ export default function Home() {
                       exist_subject(keys as Set<string>)
                     );
                     setSubject(new_subject);
+                    localStorage.setItem(
+                      'select_subject',
+                      set_to_str(new_subject as Set<string>)
+                    );
                     setTextSubject(subjects_to_str(new_subject));
                   }}
                 >
