@@ -111,6 +111,7 @@ export default function Play() {
     name: '',
     point_sum: 0,
     type_sum: 0,
+    name_ban: false,
   });
 
   // sounds
