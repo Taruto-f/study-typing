@@ -220,6 +220,7 @@ function ShowCard({
 export default function Ranking() {
   const [my_id, setId] = useState('');
   const [new_name, setNewName] = useState('');
+  const [not_ban, setBan] = useState(true);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
@@ -229,6 +230,10 @@ export default function Ranking() {
       setNewName(
         (await supabase.from('users').select('name').eq('id', id).single())
           .data!.name
+      );
+      setBan(
+        (await supabase.from('users').select('name_ban').eq('id', id).single())
+          .data!.name_ban
       );
     })();
   }, []);
@@ -245,7 +250,7 @@ export default function Ranking() {
     <>
       <div className='py-4 flex flex-col justify-center items-center my-8 gap-4'>
         <Title>Ranking</Title>
-        <Button variant='ghost' size='lg' onPress={onOpen}>
+        <Button variant='ghost' size='lg' onPress={onOpen} isDisabled={not_ban}>
           名前を変更
         </Button>
       </div>
