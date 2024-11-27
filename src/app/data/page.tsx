@@ -13,7 +13,9 @@ export default function DataPage() {
   useEffect(() => {
     (async () => {
       if (await is_session()) {
-        setData(await get_data());
+        const data=await get_data();
+        if(data!==null)
+        setData(data);
       }
     })();
   }, []);
