@@ -21,7 +21,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <NextUIProvider locale='ja-JP' navigate={router.push}>
       <ThemeProvider attribute='class' defaultTheme={theme}>
         <TopTab>
-          {/* <Welcome></Welcome> */}
+          <Welcome></Welcome>
           {children}
         </TopTab>
       </ThemeProvider>
