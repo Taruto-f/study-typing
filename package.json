@@ -8,8 +8,7 @@
     "start": "next start",
     "format": "biome format --write \"./src/\"",
     "check": "biome check \"./src/\"",
-    "test": "vitest --run",
-    "postbuild":"next-sitemap"
+    "test": "vitest --run"
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^1.11.0",
@@ -22,7 +21,6 @@
     "higgsino": "^1.0.31",
     "katex": "^0.16.19",
     "next": "^15.1.4",
-    "next-sitemap": "^4.2.3",
     "next-themes": "^0.4.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
