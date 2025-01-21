@@ -781,6 +781,16 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             yomi: 'ふぇのーるふれたいんえき',
             mean: 'アルカリ性の水溶液に赤色に反応する液',
           },
+          {
+            moji: '溶解度',
+            yomi: 'ようかいど',
+            mwan: '100g の水にとける物質の質量',
+          },
+          {
+            moji: '飽和',
+            yomi: 'ほうわ',
+            mean: '含みもつことのできる最大限度に達して、それ以上余地のないこと',
+          },
         ],
         tech: [
           {
@@ -808,6 +818,17 @@ const data_raw: Array<z.infer<typeof SeasonData>> = [
             yomi: 'せんいほうこう',
             mean: '繊維の向き',
           },
+        ],
+       english: [
+         {
+           moji: 'was',
+           yomi: 'was',
+           mean: 'is,wasの過去形',
+         },
+         {
+           moji: ''
+         },
+        
         ],
       },
     ],
